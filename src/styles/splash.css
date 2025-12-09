@@ -1,0 +1,172 @@
+/* Splash Screen Styles - Hybrid Native + PWA Approach */
+
+#splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #9945FF 0%, #7C3ACD 50%, #14F195 100%);
+  transition: opacity 0.3s ease-out;
+}
+
+#splash.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* Animated background gradient */
+.splash-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* Logo container */
+.splash-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 28px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: logoEntrance 0.6s ease-out;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes logoEntrance {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.splash-logo svg,
+.splash-logo img {
+  width: 80px;
+  height: 80px;
+}
+
+/* App name */
+.splash-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.5px;
+  animation: textFadeIn 0.5s ease-out 0.2s both;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes textFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading indicator */
+.splash-loader {
+  display: flex;
+  gap: 8px;
+  animation: loaderFadeIn 0.5s ease-out 0.4s both;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes loaderFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.splash-loader-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  animation: bounce 1.4s ease-in-out infinite;
+}
+
+.splash-loader-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.splash-loader-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.splash-loader-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Footer branding */
+.splash-footer {
+  position: absolute;
+  bottom: calc(40px + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  animation: footerFadeIn 0.5s ease-out 0.6s both;
+}
+
+@keyframes footerFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.splash-footer svg {
+  height: 20px;
+  width: auto;
+}

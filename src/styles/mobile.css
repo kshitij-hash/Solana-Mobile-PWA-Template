@@ -1,0 +1,278 @@
+/* Mobile-First PWA Styles for Solana Mobile */
+
+/* Safe Area Variables - Critical for notches & gesture bars */
+:root {
+  /* Safe area inset variables */
+  --sat: env(safe-area-inset-top);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+  --sar: env(safe-area-inset-right);
+
+  /* Theme colors - Solana branded */
+  --color-primary: #9945FF;
+  --color-primary-dark: #7C3ACD;
+  --color-secondary: #14F195;
+  --color-background: #0D0D0D;
+  --color-surface: #1A1A1A;
+  --color-surface-elevated: #242424;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A0A0A0;
+  --color-border: #333333;
+
+  /* Navigation */
+  --nav-height: 56px;
+  --header-height: 56px;
+
+  /* Touch targets - minimum 48dp per accessibility standards */
+  --touch-target-min: 48px;
+}
+
+/* Dark mode is default for crypto apps */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-background: #FFFFFF;
+    --color-surface: #F5F5F5;
+    --color-surface-elevated: #EBEBEB;
+    --color-text-primary: #0D0D0D;
+    --color-text-secondary: #666666;
+    --color-border: #E0E0E0;
+  }
+}
+
+/* Base styles */
+html {
+  /* Prevent zoom on input focus in iOS */
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  /* Prevent overscroll bounce */
+  overscroll-behavior-y: contain;
+  /* Smooth scrolling */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* App container with safe areas */
+.app-container {
+  min-height: 100dvh;
+  padding-top: var(--sat);
+  padding-left: var(--sal);
+  padding-right: var(--sar);
+  /* Account for fixed bottom nav */
+  padding-bottom: calc(var(--nav-height) + var(--sab));
+}
+
+/* Header respects camera notch */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--header-height) + var(--sat));
+  padding-top: var(--sat);
+  padding-left: calc(16px + var(--sal));
+  padding-right: calc(16px + var(--sar));
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  z-index: 100;
+}
+
+/* Bottom nav respects gesture bar */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  /* Nav height + safe area for gesture bar */
+  height: calc(var(--nav-height) + var(--sab));
+  padding-bottom: var(--sab);
+  padding-left: var(--sal);
+  padding-right: var(--sar);
+  z-index: 100;
+}
+
+/* Bottom nav items have proper touch targets */
+.bottom-nav-item {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  /* Disable tap highlight */
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.bottom-nav-item.active {
+  color: var(--color-primary);
+}
+
+.bottom-nav-item:hover {
+  color: var(--color-primary);
+}
+
+.bottom-nav-item span {
+  font-size: 11px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Main content area */
+.main-content {
+  padding-top: calc(var(--header-height) + var(--sat) + 16px);
+  padding-left: calc(16px + var(--sal));
+  padding-right: calc(16px + var(--sar));
+  padding-bottom: calc(var(--nav-height) + var(--sab) + 16px);
+  min-height: 100dvh;
+}
+
+/* Mobile-optimized touch interactions */
+.touchable {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; /* Disable double-tap zoom */
+  cursor: pointer;
+}
+
+/* Buttons with proper touch targets */
+.btn {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(153, 69, 255, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  background: var(--color-surface);
+}
+
+/* Card component */
+.card {
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+}
+
+/* Disable pull-to-refresh when not needed */
+.no-overscroll {
+  overscroll-behavior-y: contain;
+}
+
+/* Scrollable areas that respect safe areas */
+.scroll-container {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: var(--sab);
+}
+
+/* Loading spinner */
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Wallet address display */
+.wallet-address {
+  font-family: 'SF Mono', 'Roboto Mono', monospace;
+  font-size: 14px;
+  background: var(--color-surface-elevated);
+  padding: 8px 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Toast notifications */
+.toast {
+  position: fixed;
+  bottom: calc(var(--nav-height) + var(--sab) + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

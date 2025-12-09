@@ -1,36 +1,270 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Solana Mobile PWA Template
 
-## Getting Started
+A production-ready, mobile-optimized Progressive Web App template for Solana with Mobile Wallet Adapter (MWA) integration. Built for the Solana Mobile ecosystem.
 
-First, run the development server:
+![Solana Mobile PWA](https://img.shields.io/badge/Solana-Mobile-9945FF?style=for-the-badge&logo=solana)
+![Next.js 14](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)
+
+## Features
+
+- **Mobile Wallet Adapter (MWA)** - Seamless connection with Solana mobile wallets
+- **Hybrid Splash Screen** - Native + PWA animated splash for smooth app launch
+- **Chrome Browser Preference** - Custom TWA config that defaults to Chrome
+- **Safe Area Support** - Proper handling of notches, gesture bars, and curved edges
+- **Bottom Navigation** - Mobile-intuitive navigation with 48dp+ touch targets
+- **PWA Ready** - Installable as a native-like app on any device
+- **Bubblewrap Integration** - Complete TWA configuration for dApp Store publishing
+
+## Quick Start
 
 ```bash
+# Clone the template
+git clone https://github.com/your-username/solana-mobile-pwa-template.git
+cd solana-mobile-pwa-template
+
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) on your mobile device or emulator.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+solana-mobile-pwa-template/
+├── src/
+│   ├── app/                      # Next.js App Router pages
+│   │   ├── layout.tsx            # Root layout with PWA meta tags
+│   │   ├── page.tsx              # Home page
+│   │   ├── wallet/page.tsx       # Wallet page
+│   │   ├── send/page.tsx         # Send SOL page
+│   │   └── settings/page.tsx     # Settings page
+│   │
+│   ├── components/
+│   │   ├── navigation/
+│   │   │   ├── BottomNav.tsx     # Mobile bottom navigation
+│   │   │   └── Header.tsx        # Page header with back button
+│   │   │
+│   │   ├── splash/
+│   │   │   └── SplashScreen.tsx  # Animated splash screen
+│   │   │
+│   │   └── wallet/
+│   │       ├── WalletProvider.tsx # Wallet context setup
+│   │       └── WalletButton.tsx   # Connect/disconnect button
+│   │
+│   ├── hooks/
+│   │   └── useSafeArea.ts        # Safe area insets hook
+│   │
+│   └── styles/
+│       ├── mobile.css            # Mobile-first styles
+│       └── splash.css            # Splash screen animations
+│
+├── public/
+│   ├── manifest.json             # PWA web manifest
+│   ├── icons/                    # App icons (all sizes)
+│   └── .well-known/
+│       └── assetlinks.json       # Digital Asset Links for TWA
+│
+├── twa/                          # Bubblewrap TWA configuration
+│   ├── twa-manifest.json         # TWA configuration
+│   ├── CustomLauncherActivity.java  # Chrome preference activity
+│   └── scripts/
+│       └── build-twa.sh          # Build script
+│
+└── docs/
+    ├── SETUP.md                  # Detailed setup guide
+    ├── TWA-GUIDE.md              # TWA/Bubblewrap guide
+    └── PUBLISHING.md             # dApp Store publishing guide
+```
 
-## Learn More
+## Key Features Explained
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Mobile Wallet Adapter (MWA)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The template includes full MWA integration for connecting to Solana mobile wallets:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```tsx
+import { useWallet } from '@solana/wallet-adapter-react';
 
-## Deploy on Vercel
+function MyComponent() {
+  const { connected, publicKey, sendTransaction } = useWallet();
+  // Your wallet logic here
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 2. Hybrid Splash Screen
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Two-layer splash system for the best user experience:
+
+1. **Native Layer**: Instant splash via Bubblewrap config (solid color + icon)
+2. **PWA Layer**: Animated overlay that takes over once web content loads
+
+```tsx
+<SplashScreen
+  onComplete={() => setShowSplash(false)}
+  minDisplayTime={1500}
+/>
+```
+
+### 3. Chrome Browser Preference
+
+The `CustomLauncherActivity.java` forces Chrome as the TWA browser:
+
+```java
+@Override
+protected String getProviderPackage() {
+    for (String chromePackage : CHROME_PACKAGES) {
+        if (isPackageInstalled(chromePackage)) {
+            return chromePackage;
+        }
+    }
+    return null; // Fall back to system default
+}
+```
+
+### 4. Safe Area Handling
+
+CSS variables for handling device-specific safe areas:
+
+```css
+:root {
+  --sat: env(safe-area-inset-top);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+  --sar: env(safe-area-inset-right);
+}
+
+.bottom-nav {
+  padding-bottom: var(--sab);
+  height: calc(56px + var(--sab));
+}
+```
+
+## Building for Production
+
+### Web Deployment
+
+```bash
+# Build the Next.js app
+npm run build
+
+# Deploy to Vercel, Netlify, or your preferred host
+```
+
+### TWA (Android App) Build
+
+1. **Update configuration**:
+   - Edit `twa/twa-manifest.json` with your app details
+   - Update `public/.well-known/assetlinks.json` with your signing key fingerprint
+
+2. **Build the TWA**:
+   ```bash
+   cd twa
+   ./scripts/build-twa.sh
+   ```
+
+3. **Sign the APK**:
+   ```bash
+   jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+     -keystore ./keys/release.keystore \
+     app/build/outputs/apk/release/app-release-unsigned.apk release
+   ```
+
+## Digital Asset Links Setup
+
+For frameless TWA mode (no browser UI), configure Digital Asset Links:
+
+1. Get your signing key fingerprint:
+   ```bash
+   keytool -list -v -keystore ./keys/release.keystore
+   ```
+
+2. Update `public/.well-known/assetlinks.json`:
+   ```json
+   [{
+     "relation": ["delegate_permission/common.handle_all_urls"],
+     "target": {
+       "namespace": "android_app",
+       "package_name": "com.example.solanapwa",
+       "sha256_cert_fingerprints": ["YOUR_FINGERPRINT_HERE"]
+     }
+   }]
+   ```
+
+3. Deploy your PWA and ensure the file is accessible at:
+   `https://your-domain.com/.well-known/assetlinks.json`
+
+## Publishing to Solana dApp Store
+
+1. Build your TWA APK (see above)
+2. Follow the [Solana dApp Store submission guide](https://docs.solanamobile.com/dapp-publishing)
+3. Submit via the publisher portal
+
+## Customization
+
+### Theming
+
+Edit CSS variables in `src/styles/mobile.css`:
+
+```css
+:root {
+  --color-primary: #9945FF;      /* Your brand color */
+  --color-secondary: #14F195;    /* Accent color */
+  --color-background: #0D0D0D;   /* Background */
+}
+```
+
+### Navigation Items
+
+Edit `src/components/navigation/BottomNav.tsx`:
+
+```tsx
+const navItems: NavItem[] = [
+  { icon: <Home />, label: 'Home', href: '/' },
+  { icon: <Wallet />, label: 'Wallet', href: '/wallet' },
+  // Add your pages here
+];
+```
+
+### Network Configuration
+
+Edit `src/components/wallet/WalletProvider.tsx`:
+
+```tsx
+<WalletProvider network={WalletAdapterNetwork.Mainnet}>
+  {children}
+</WalletProvider>
+```
+
+## Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + CSS Variables
+- **Wallet**: @solana-mobile/wallet-adapter-mobile
+- **Web3**: @solana/web3.js
+- **Icons**: Lucide React
+- **TWA**: Bubblewrap CLI
+
+## Contributing
+
+Contributions are welcome! Please read our contributing guidelines before submitting a PR.
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+## Resources
+
+- [Solana Mobile Documentation](https://docs.solanamobile.com)
+- [Mobile Wallet Adapter](https://github.com/solana-mobile/mobile-wallet-adapter)
+- [Bubblewrap CLI](https://github.com/nicooloo/nicooloo/nicooloo)
+- [TWA Quick Start](https://developer.chrome.com/docs/android/trusted-web-activity/quick-start)
+
+---
+
+Built with love for the Solana Mobile ecosystem.
