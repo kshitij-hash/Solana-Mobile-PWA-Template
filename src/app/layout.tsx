@@ -48,10 +48,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
 
         {/* Splash screens for iOS */}
-        <link
-          rel="apple-touch-startup-image"
-          href="/icons/icon-512x512.png"
-        />
+        <link rel="apple-touch-startup-image" href="/icons/icon-512x512.png" />
       </head>
       <body className={`${inter.variable} antialiased`}>
         <Providers>{children}</Providers>

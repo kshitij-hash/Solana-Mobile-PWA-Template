@@ -20,7 +20,7 @@ export function Header({ title, showBack = false, rightAction }: HeaderProps) {
           {showBack && (
             <button
               onClick={() => router.back()}
-              className="touchable flex items-center justify-center w-10 h-10 -ml-2 rounded-full hover:bg-[var(--color-surface-elevated)]"
+              className="touchable flex items-center justify-center w-10 h-10 -ml-2 rounded-full hover:bg-(--color-surface-elevated)"
               aria-label="Go back"
             >
               <ChevronLeft size={24} />

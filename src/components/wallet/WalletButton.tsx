@@ -3,31 +3,64 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { Wallet, LogOut, Copy, Check } from 'lucide-react';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface WalletButtonProps {
   className?: string;
 }
 
 export function WalletButton({ className = '' }: WalletButtonProps) {
-  const { connected, connecting, publicKey, disconnect, select, wallets } = useWallet();
+  const { connected, connecting, publicKey, disconnect, select, wallets, wallet, connect } =
+    useWallet();
   const { setVisible } = useWalletModal();
   const [copied, setCopied] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  // Reset connecting state when wallet changes or disconnects
+  useEffect(() => {
+    if (!connecting) {
+      setIsConnecting(false);
+    }
+  }, [connecting]);
 
   const handleConnect = useCallback(async () => {
-    // Check if Mobile Wallet Adapter is available
-    const mwaWallet = wallets.find(
-      (w) => w.adapter.name === 'Mobile Wallet Adapter'
-    );
+    if (isConnecting) return; // Prevent double-clicks
 
-    if (mwaWallet) {
-      // On mobile, directly select MWA
-      select(mwaWallet.adapter.name);
-    } else {
-      // Show modal for other wallets
-      setVisible(true);
+    setIsConnecting(true);
+
+    try {
+      // Check if Mobile Wallet Adapter is available
+      const mwaWallet = wallets.find((w) => w.adapter.name === 'Mobile Wallet Adapter');
+
+      if (mwaWallet) {
+        // If wallet is already selected but not connected, try to connect
+        if (wallet?.adapter.name === 'Mobile Wallet Adapter' && !connected) {
+          try {
+            await connect();
+          } catch (error) {
+            // User rejected or error occurred - reset state
+            console.log('Connection failed or rejected:', error);
+            // Disconnect to reset adapter state
+            try {
+              await disconnect();
+            } catch {
+              // Ignore disconnect errors
+            }
+          }
+        } else {
+          // Select the MWA wallet (this auto-connects with autoConnect)
+          select(mwaWallet.adapter.name);
+        }
+      } else {
+        // Show modal for other wallets
+        setVisible(true);
+      }
+    } catch (error) {
+      console.error('Wallet connection error:', error);
+    } finally {
+      setIsConnecting(false);
     }
-  }, [wallets, select, setVisible]);
+  }, [wallets, select, setVisible, wallet, connected, connect, disconnect, isConnecting]);
 
   const copyAddress = useCallback(async () => {
     if (publicKey) {
@@ -41,7 +74,7 @@ export function WalletButton({ className = '' }: WalletButtonProps) {
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
   };
 
-  if (connecting) {
+  if (connecting || isConnecting) {
     return (
       <button className={`btn btn-primary ${className}`} disabled>
         <div className="spinner" />
@@ -56,24 +89,20 @@ export function WalletButton({ className = '' }: WalletButtonProps) {
         {/* Address display */}
         <div className="card flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-linear-to-br from-(--color-primary) to-(--color-secondary) flex items-center justify-center">
               <Wallet size={20} className="text-white" />
             </div>
             <div>
-              <p className="text-sm text-[var(--color-text-secondary)]">Connected</p>
+              <p className="text-sm text-(--color-text-secondary)">Connected</p>
               <p className="wallet-address">{shortenAddress(publicKey.toBase58())}</p>
             </div>
           </div>
           <button
             onClick={copyAddress}
-            className="touchable p-2 rounded-lg hover:bg-[var(--color-surface-elevated)]"
+            className="touchable p-2 rounded-lg hover:bg-(--color-surface-elevated)"
             aria-label="Copy address"
           >
-            {copied ? (
-              <Check size={20} className="text-[var(--color-secondary)]" />
-            ) : (
-              <Copy size={20} />
-            )}
+            {copied ? <Check size={20} className="text-(--color-secondary)" /> : <Copy size={20} />}
           </button>
         </div>
 

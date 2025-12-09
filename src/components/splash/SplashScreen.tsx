@@ -82,15 +82,36 @@ function SolanaLogo() {
         fill="url(#paint2_linear)"
       />
       <defs>
-        <linearGradient id="paint0_linear" x1="360.879" y1="-37.4553" x2="141.213" y2="383.294" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="paint0_linear"
+          x1="360.879"
+          y1="-37.4553"
+          x2="141.213"
+          y2="383.294"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor="#00FFA3" />
           <stop offset="1" stopColor="#DC1FFF" />
         </linearGradient>
-        <linearGradient id="paint1_linear" x1="264.829" y1="-87.6014" x2="45.163" y2="333.147" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="paint1_linear"
+          x1="264.829"
+          y1="-87.6014"
+          x2="45.163"
+          y2="333.147"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor="#00FFA3" />
           <stop offset="1" stopColor="#DC1FFF" />
         </linearGradient>
-        <linearGradient id="paint2_linear" x1="312.548" y1="-62.6882" x2="92.8822" y2="358.061" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="paint2_linear"
+          x1="312.548"
+          y1="-62.6882"
+          x2="92.8822"
+          y2="358.061"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor="#00FFA3" />
           <stop offset="1" stopColor="#DC1FFF" />
         </linearGradient>
@@ -127,10 +148,7 @@ function SolanaTextLogo() {
         d="M454.26 78L449.2 63.28H421.57L416.51 78H394.63L424.55 0H446.35L476.28 78H454.26ZM426.56 47.56H444.12L435.28 21.24L426.56 47.56Z"
         fill="white"
       />
-      <path
-        d="M488.67 78V0H509L543.5 48.87V0H563.86V78H543.5L509 29.17V78H488.67Z"
-        fill="white"
-      />
+      <path d="M488.67 78V0H509L543.5 48.87V0H563.86V78H543.5L509 29.17V78H488.67Z" fill="white" />
       <path
         d="M633.14 78L628.08 63.28H600.45L595.39 78H573.51L603.43 0H625.23L655.16 78H633.14ZM605.44 47.56H623L614.16 21.24L605.44 47.56Z"
         fill="white"

@@ -42,10 +42,7 @@ async function generateIcons() {
   for (const size of ICON_SIZES) {
     const outputPath = path.join(OUTPUT_DIR, `icon-${size}x${size}.png`);
 
-    await sharp(SVG_PATH)
-      .resize(size, size)
-      .png()
-      .toFile(outputPath);
+    await sharp(SVG_PATH).resize(size, size).png().toFile(outputPath);
 
     console.log(`✓ Generated ${size}x${size}`);
   }
@@ -61,7 +58,7 @@ async function generateIcons() {
       bottom: padding,
       left: padding,
       right: padding,
-      background: { r: 153, g: 69, b: 255, alpha: 1 } // #9945FF
+      background: { r: 153, g: 69, b: 255, alpha: 1 }, // #9945FF
     })
     .png()
     .toFile(path.join(OUTPUT_DIR, 'icon-maskable-512x512.png'));

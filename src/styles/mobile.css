@@ -9,14 +9,14 @@
   --sar: env(safe-area-inset-right);
 
   /* Theme colors - Solana branded */
-  --color-primary: #9945FF;
-  --color-primary-dark: #7C3ACD;
-  --color-secondary: #14F195;
-  --color-background: #0D0D0D;
-  --color-surface: #1A1A1A;
+  --color-primary: #9945ff;
+  --color-primary-dark: #7c3acd;
+  --color-secondary: #14f195;
+  --color-background: #0d0d0d;
+  --color-surface: #1a1a1a;
   --color-surface-elevated: #242424;
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #A0A0A0;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a0a0a0;
   --color-border: #333333;
 
   /* Navigation */
@@ -30,12 +30,12 @@
 /* Dark mode is default for crypto apps */
 @media (prefers-color-scheme: light) {
   :root {
-    --color-background: #FFFFFF;
-    --color-surface: #F5F5F5;
-    --color-surface-elevated: #EBEBEB;
-    --color-text-primary: #0D0D0D;
+    --color-background: #ffffff;
+    --color-surface: #f5f5f5;
+    --color-surface-elevated: #ebebeb;
+    --color-text-primary: #0d0d0d;
     --color-text-secondary: #666666;
-    --color-border: #E0E0E0;
+    --color-border: #e0e0e0;
   }
 }
 

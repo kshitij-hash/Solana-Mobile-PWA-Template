@@ -20,7 +20,7 @@ export default function HomePage() {
             <br />
             PWA Template
           </h1>
-          <p className="text-[var(--color-text-secondary)] text-lg">
+          <p className="text-(--color-text-secondary) text-lg">
             Mobile-optimized dApp with MWA integration
           </p>
         </section>
@@ -37,19 +37,19 @@ export default function HomePage() {
           <h2 className="text-lg font-semibold mb-4">Features</h2>
 
           <FeatureCard
-            icon={<Smartphone className="text-[var(--color-primary)]" />}
+            icon={<Smartphone className="text-(--color-primary)" />}
             title="Mobile Wallet Adapter"
             description="Connect seamlessly with Solana mobile wallets"
           />
 
           <FeatureCard
-            icon={<Zap className="text-[var(--color-secondary)]" />}
+            icon={<Zap className="text-(--color-secondary)" />}
             title="PWA Ready"
             description="Install as a native-like app on any device"
           />
 
           <FeatureCard
-            icon={<Shield className="text-[var(--color-primary)]" />}
+            icon={<Shield className="text-(--color-primary)" />}
             title="Safe Area Support"
             description="Handles notches and gesture bars properly"
           />
@@ -80,12 +80,12 @@ function FeatureCard({
 }) {
   return (
     <div className="card flex items-start gap-4">
-      <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-elevated)] flex items-center justify-center flex-shrink-0">
+      <div className="w-10 h-10 rounded-xl bg-(--color-surface-elevated) flex items-center justify-center shrink-0">
         {icon}
       </div>
       <div>
         <h3 className="font-semibold mb-1">{title}</h3>
-        <p className="text-sm text-[var(--color-text-secondary)]">{description}</p>
+        <p className="text-sm text-(--color-text-secondary)">{description}</p>
       </div>
     </div>
   );
