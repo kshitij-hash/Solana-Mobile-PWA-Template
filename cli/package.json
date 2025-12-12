@@ -1,6 +1,6 @@
 {
   "name": "create-solana-pwa",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create a new Solana Mobile PWA project with MWA integration",
   "type": "module",
   "bin": {
@@ -35,7 +35,7 @@
   "bugs": {
     "url": "https://github.com/kshitij-hash/Solana-Mobile-PWA-Template/issues"
   },
-  "homepage": "https://github.com/kshitij-hash/Solana-Mobile-PWA-Template#readme",
+  "homepage": "https://solana-pwa-docs.vercel.app",
   "engines": {
     "node": ">=18.0.0"
   }

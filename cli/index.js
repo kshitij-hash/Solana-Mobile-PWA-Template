@@ -120,7 +120,7 @@ ${colors.cyan}Features:${colors.reset}
   • Pull-to-refresh support
 
 ${colors.cyan}Learn more:${colors.reset}
-  https://docs.solanamobile.com
+  https://solana-pwa-docs.vercel.app
 `);
 }
 
@@ -192,9 +192,10 @@ ${colors.magenta}╚════════════════════
       { stdio: 'pipe' }
     );
 
-    // Remove .git directory and cli directory from cloned repo
+    // Remove .git directory, cli directory, and docs-site from cloned repo
     execSync(`rm -rf "${join(projectPath, '.git')}"`, { stdio: 'pipe' });
     execSync(`rm -rf "${join(projectPath, 'cli')}"`, { stdio: 'pipe' });
+    execSync(`rm -rf "${join(projectPath, 'docs-site')}"`, { stdio: 'pipe' });
 
     logSuccess('Template cloned successfully');
   } catch (error) {
@@ -320,11 +321,7 @@ ${colors.bold}Build TWA (Android app):${colors.reset}
 
 ${colors.bold}Documentation:${colors.reset}
 
-  • PWA Setup: ${colors.cyan}docs/SETUP.md${colors.reset}
-  • TWA Guide: ${colors.cyan}docs/TWA-GUIDE.md${colors.reset}
-  • Publishing: ${colors.cyan}docs/PUBLISHING.md${colors.reset}
-
-${colors.bold}Learn more:${colors.reset} ${colors.cyan}https://docs.solanamobile.com${colors.reset}
+  ${colors.cyan}https://solana-pwa-docs.vercel.app${colors.reset}
 `);
 }
 

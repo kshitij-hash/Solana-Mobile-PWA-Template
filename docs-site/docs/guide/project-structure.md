@@ -54,12 +54,6 @@ solana-mobile-pwa-template/
 │   ├── index.js                      # npx create-solana-pwa
 │   └── package.json                  # npm package config
 │
-├── docs/                             # Documentation (markdown)
-│   ├── SETUP.md                      # Detailed setup guide
-│   ├── TWA-GUIDE.md                  # TWA/Bubblewrap guide
-│   ├── CUSTOMIZATION.md              # Theming and customization
-│   └── PUBLISHING.md                 # dApp Store publishing
-│
 └── package.json                      # Dependencies
 ```
 

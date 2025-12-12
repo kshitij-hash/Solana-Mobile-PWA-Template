@@ -154,11 +154,7 @@ Build TWA (Android app):
 
 Documentation:
 
-  • PWA Setup: docs/SETUP.md
-  • TWA Guide: docs/TWA-GUIDE.md
-  • Publishing: docs/PUBLISHING.md
-
-Learn more: https://docs.solanamobile.com
+  https://solana-pwa-docs.vercel.app
 ```
 
 ## Exit Codes

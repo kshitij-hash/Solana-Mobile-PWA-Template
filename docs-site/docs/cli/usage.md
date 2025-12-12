@@ -69,7 +69,6 @@ my-dapp/
 │   ├── twa-manifest.json
 │   ├── CustomLauncherActivity.java
 │   └── scripts/build-twa.sh
-├── docs/                       # Documentation
 ├── package.json
 └── README.md
 ```
