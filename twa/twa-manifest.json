@@ -1,46 +1,54 @@
 {
-  "packageId": "com.example.solanamobilepwa",
-  "host": "your-domain.com",
+  "packageId": "com.solanapwa.template",
+  "host": "solana-pwa-template.vercel.app",
   "name": "Solana Mobile PWA",
-  "launcherName": "Solana PWA",
+  "launcherName": "SolanaPWA",
   "display": "standalone",
   "themeColor": "#9945FF",
+  "themeColorDark": "#000000",
   "navigationColor": "#000000",
   "navigationColorDark": "#000000",
   "navigationDividerColor": "#000000",
   "navigationDividerColorDark": "#000000",
-  "backgroundColor": "#0a0a0a",
-  "startUrl": "/",
-  "iconUrl": "/icons/icon-512x512.png",
-  "maskableIconUrl": "/icons/icon-maskable-512x512.png",
-  "splashScreenFadeOutDuration": 300,
+  "backgroundColor": "#9945FF",
   "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://solana-pwa-template.vercel.app/icons/icon-512x512.png",
+  "maskableIconUrl": "https://solana-pwa-template.vercel.app/icons/icon-maskable-512x512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "/Users/kshitijhash/dev/solana-mobile-mcp/solana-mobile-pwa-template/twa/android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
   "shortcuts": [
     {
-      "name": "Wallet",
+      "name": "Connect Wallet",
       "shortName": "Wallet",
-      "url": "/wallet",
-      "icons": [
-        {
-          "src": "/icons/icon-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
+      "url": "https://solana-pwa-template.vercel.app/wallet",
+      "chosenIconUrl": "https://solana-pwa-template.vercel.app/icons/icon-192x192.png"
     }
   ],
-  "webManifestUrl": "/manifest.json",
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://solana-pwa-template.vercel.app/manifest.json",
   "fallbackType": "customtabs",
-  "enableSiteSettingsShortcut": false,
-  "orientation": "portrait",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://solana-pwa-template.vercel.app/",
+  "minSdkVersion": 21,
+  "orientation": "portrait-primary",
   "fingerprints": [],
   "additionalTrustedOrigins": [],
   "retainedBundles": [],
-  "signing": {
-    "keystore": "./android.keystore",
-    "alias": "android"
-  },
-  "appVersionCode": 1,
-  "appVersionName": "1.0.0",
-  "minSdkVersion": 24,
-  "targetSdkVersion": 34
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "1"
 }

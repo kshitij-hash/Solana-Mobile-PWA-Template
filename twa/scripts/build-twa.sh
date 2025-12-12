@@ -30,7 +30,7 @@ echo ""
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TWA_DIR="$(dirname "$SCRIPT_DIR")"
 PROJECT_ROOT="$(dirname "$TWA_DIR")"
-PACKAGE_PATH="com/example/solanapwa"
+PACKAGE_PATH="com/solanapwa/template"
 
 # Check for bubblewrap
 if ! command -v bubblewrap &> /dev/null; then

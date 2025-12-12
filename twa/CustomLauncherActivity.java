@@ -13,7 +13,7 @@
  * 2. Update AndroidManifest.xml to use CustomLauncherActivity instead of LauncherActivity
  * 3. Build with: ./gradlew assembleRelease
  */
-package com.example.solanapwa;
+package com.solanapwa.template;
 
 import android.content.pm.PackageManager;
 import android.util.Log;
