@@ -58,5 +58,5 @@ twa/*
 
 # Docs site
 docs-site/node_modules/
-docs-site/.vitepress/*
-!docs-site/.vitepress/config.mts
+docs-site/docs/.vitepress/*
+!docs-site/docs/.vitepress/config.mts

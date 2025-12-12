@@ -6,7 +6,7 @@ Configure the Solana Mobile PWA Template for your project.
 
 Create a `.env.local` file for environment-specific settings:
 
-```env
+```bash
 # Solana Network (mainnet-beta, devnet, testnet)
 NEXT_PUBLIC_SOLANA_NETWORK=mainnet-beta
 
