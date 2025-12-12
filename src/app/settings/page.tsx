@@ -3,11 +3,13 @@
 import { Header } from '@/components/navigation/Header';
 import { useStandalone } from '@/hooks/useSafeArea';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
+import { useNetwork } from '@/contexts/NetworkContext';
 import { Smartphone, Globe, Info, ExternalLink, Download } from 'lucide-react';
 
 export default function SettingsPage() {
   const isStandalone = useStandalone();
   const { isInstallable, promptInstall } = usePWAInstall();
+  const { networkName, isMainnet } = useNetwork();
 
   return (
     <>
@@ -45,10 +47,16 @@ export default function SettingsPage() {
           <div className="card">
             <h3 className="font-semibold mb-4">Network</h3>
             <div className="flex items-center justify-between">
-              <span>Solana Devnet</span>
-              <span className="px-2 py-1 bg-yellow-500/20 text-yellow-500 text-xs font-medium rounded-full">
-                Testnet
-              </span>
+              <span>Solana {networkName}</span>
+              {isMainnet ? (
+                <span className="px-2 py-1 bg-green-500/20 text-green-500 text-xs font-medium rounded-full">
+                  Production
+                </span>
+              ) : (
+                <span className="px-2 py-1 bg-yellow-500/20 text-yellow-500 text-xs font-medium rounded-full">
+                  Testnet
+                </span>
+              )}
             </div>
           </div>
 

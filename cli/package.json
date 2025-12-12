@@ -1,0 +1,41 @@
+{
+  "name": "create-solana-pwa",
+  "version": "1.0.0",
+  "description": "Create a new Solana Mobile PWA project with MWA integration",
+  "type": "module",
+  "bin": {
+    "create-solana-pwa": "./index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "solana",
+    "pwa",
+    "mobile",
+    "wallet-adapter",
+    "mwa",
+    "mobile-wallet-adapter",
+    "create",
+    "template",
+    "nextjs",
+    "react",
+    "twa",
+    "trusted-web-activity",
+    "dapp-store"
+  ],
+  "author": "Solana Mobile Community",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solana-mobile/solana-mobile-pwa-template.git",
+    "directory": "cli"
+  },
+  "bugs": {
+    "url": "https://github.com/solana-mobile/solana-mobile-pwa-template/issues"
+  },
+  "homepage": "https://github.com/solana-mobile/solana-mobile-pwa-template#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

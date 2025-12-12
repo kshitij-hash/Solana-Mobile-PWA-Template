@@ -1,19 +1,16 @@
 'use client';
 
-import { useMemo, ReactNode } from 'react';
+// Import MWA registration first - this registers MWA before anything else
+import { isAndroidMobile } from '@/lib/mwa';
+
+import { useMemo, ReactNode, useCallback } from 'react';
 import {
   ConnectionProvider,
   WalletProvider as SolanaWalletProvider,
 } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base';
 import { clusterApiUrl } from '@solana/web3.js';
-import {
-  SolanaMobileWalletAdapter,
-  createDefaultAddressSelector,
-  createDefaultAuthorizationResultCache,
-  createDefaultWalletNotFoundHandler,
-} from '@solana-mobile/wallet-adapter-mobile';
 
 // Import wallet adapter styles
 import '@solana/wallet-adapter-react-ui/styles.css';
@@ -35,26 +32,28 @@ export function WalletProvider({
     [network, customEndpoint]
   );
 
-  // Configure wallets - Mobile Wallet Adapter for Android
-  const wallets = useMemo(() => {
-    return [
-      new SolanaMobileWalletAdapter({
-        addressSelector: createDefaultAddressSelector(),
-        appIdentity: {
-          name: 'Solana Mobile PWA',
-          uri: typeof window !== 'undefined' ? window.location.origin : '',
-          icon: '/icons/icon-192x192.png',
-        },
-        authorizationResultCache: createDefaultAuthorizationResultCache(),
-        cluster: network,
-        onWalletNotFound: createDefaultWalletNotFoundHandler(),
-      }),
-    ];
-  }, [network]);
+  // Handle wallet errors - only log non-connection errors
+  // WalletAccountError can happen during autoConnect when wallet isn't ready
+  const handleWalletError = useCallback((error: WalletError) => {
+    // Suppress common errors that occur during normal connection flow
+    if (error.name === 'WalletAccountError' || error.name === 'WalletNotReadyError') {
+      console.log(`[Wallet] Suppressed expected error: ${error.name}`);
+      return;
+    }
+    console.error(`Wallet error: ${error.name}: ${error.message}`);
+  }, []);
+
+  // Empty wallets array - MWA is registered via wallet-standard above
+  // SolanaMobileWalletAdapter is added automatically in compatible mobile contexts
+  const wallets = useMemo(() => [], []);
 
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <SolanaWalletProvider wallets={wallets} autoConnect>
+      <SolanaWalletProvider
+        wallets={wallets}
+        autoConnect={isAndroidMobile()}
+        onError={handleWalletError}
+      >
         <WalletModalProvider>{children}</WalletModalProvider>
       </SolanaWalletProvider>
     </ConnectionProvider>

@@ -1,65 +1,46 @@
 {
-  "packageId": "com.example.solanapwa",
-  "host": "your-pwa-domain.com",
+  "packageId": "com.example.solanamobilepwa",
+  "host": "your-domain.com",
   "name": "Solana Mobile PWA",
   "launcherName": "Solana PWA",
   "display": "standalone",
   "themeColor": "#9945FF",
-  "navigationColor": "#0D0D0D",
-  "navigationColorDark": "#0D0D0D",
-  "navigationDividerColor": "#333333",
-  "navigationDividerColorDark": "#333333",
-  "backgroundColor": "#9945FF",
-  "enableNotifications": true,
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#0a0a0a",
   "startUrl": "/",
   "iconUrl": "/icons/icon-512x512.png",
   "maskableIconUrl": "/icons/icon-maskable-512x512.png",
   "splashScreenFadeOutDuration": 300,
-  "signingKey": {
-    "path": "./keys/release.keystore",
-    "alias": "release"
-  },
-  "appVersionCode": 1,
-  "appVersionName": "1.0.0",
+  "enableNotifications": true,
   "shortcuts": [
     {
       "name": "Wallet",
       "shortName": "Wallet",
       "url": "/wallet",
-      "chosenIconUrl": "/icons/icon-192x192.png"
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ],
-  "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "/manifest.json",
   "fallbackType": "customtabs",
   "enableSiteSettingsShortcut": false,
-  "isChromeOSOnly": false,
-  "isMetaQuest": false,
-  "fullScopeUrl": "/",
-  "minSdkVersion": 23,
   "orientation": "portrait",
   "fingerprints": [],
   "additionalTrustedOrigins": [],
   "retainedBundles": [],
-  "playBilling": {
-    "enabled": false
-  },
-  "alphaDependencies": {
-    "enabled": false
-  },
-  "features": {
-    "locationDelegation": {
-      "enabled": false
-    },
-    "playBilling": {
-      "enabled": false
-    }
-  },
-  "enableNotificationDelegation": false,
-  "shareTarget": {},
-  "serviceAccountJsonFile": "",
   "signing": {
-    "certPath": "",
-    "keyPass": ""
-  }
+    "keystore": "./android.keystore",
+    "alias": "android"
+  },
+  "appVersionCode": 1,
+  "appVersionName": "1.0.0",
+  "minSdkVersion": 24,
+  "targetSdkVersion": 34
 }

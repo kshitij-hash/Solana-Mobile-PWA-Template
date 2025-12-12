@@ -3,64 +3,17 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { Wallet, LogOut, Copy, Check } from 'lucide-react';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 interface WalletButtonProps {
   className?: string;
 }
 
 export function WalletButton({ className = '' }: WalletButtonProps) {
-  const { connected, connecting, publicKey, disconnect, select, wallets, wallet, connect } =
-    useWallet();
-  const { setVisible } = useWalletModal();
+  const { connected, connecting, publicKey, disconnect, wallet, connect } = useWallet();
+  const { setVisible: showWalletSelectionModal } = useWalletModal();
   const [copied, setCopied] = useState(false);
-  const [isConnecting, setIsConnecting] = useState(false);
 
-  // Reset connecting state when wallet changes or disconnects
-  useEffect(() => {
-    if (!connecting) {
-      setIsConnecting(false);
-    }
-  }, [connecting]);
-
-  const handleConnect = useCallback(async () => {
-    if (isConnecting) return; // Prevent double-clicks
-
-    setIsConnecting(true);
-
-    try {
-      // Check if Mobile Wallet Adapter is available
-      const mwaWallet = wallets.find((w) => w.adapter.name === 'Mobile Wallet Adapter');
-
-      if (mwaWallet) {
-        // If wallet is already selected but not connected, try to connect
-        if (wallet?.adapter.name === 'Mobile Wallet Adapter' && !connected) {
-          try {
-            await connect();
-          } catch (error) {
-            // User rejected or error occurred - reset state
-            console.log('Connection failed or rejected:', error);
-            // Disconnect to reset adapter state
-            try {
-              await disconnect();
-            } catch {
-              // Ignore disconnect errors
-            }
-          }
-        } else {
-          // Select the MWA wallet (this auto-connects with autoConnect)
-          select(mwaWallet.adapter.name);
-        }
-      } else {
-        // Show modal for other wallets
-        setVisible(true);
-      }
-    } catch (error) {
-      console.error('Wallet connection error:', error);
-    } finally {
-      setIsConnecting(false);
-    }
-  }, [wallets, select, setVisible, wallet, connected, connect, disconnect, isConnecting]);
 
   const copyAddress = useCallback(async () => {
     if (publicKey) {
@@ -74,7 +27,21 @@ export function WalletButton({ className = '' }: WalletButtonProps) {
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
   };
 
-  if (connecting || isConnecting) {
+  // Simple connect handler - if wallet is selected, connect directly
+  // Otherwise show modal to select a wallet
+  const handleConnect = useCallback(async () => {
+    if (wallet != null) {
+      try {
+        await connect();
+      } catch (err) {
+        console.error('[WalletButton] connect error:', err);
+      }
+    } else {
+      showWalletSelectionModal(true);
+    }
+  }, [wallet, connect, showWalletSelectionModal]);
+
+  if (connecting) {
     return (
       <button className={`btn btn-primary ${className}`} disabled>
         <div className="spinner" />

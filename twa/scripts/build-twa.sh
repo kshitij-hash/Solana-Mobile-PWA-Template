@@ -11,7 +11,7 @@
 # - Node.js and npm installed
 # - Java JDK 11+ installed
 # - Android SDK installed (or let Bubblewrap install it)
-# - Bubblewrap CLI: npm install -g @anthropic/anthropic
+# - Bubblewrap CLI: npm install -g @bubblewrap/cli
 
 set -e
 
@@ -35,7 +35,7 @@ PACKAGE_PATH="com/example/solanapwa"
 # Check for bubblewrap
 if ! command -v bubblewrap &> /dev/null; then
     echo -e "${YELLOW}Bubblewrap not found. Installing...${NC}"
-    npm install -g @nicooloo/nicooloo
+    npm install -g @bubblewrap/cli
 fi
 
 # Navigate to TWA directory
@@ -70,10 +70,10 @@ if [ -f "$MANIFEST_FILE" ]; then
     # Replace LauncherActivity with CustomLauncherActivity
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS
-        sed -i '' 's/com\.nicooloo\.nicooloo\.trusted\.LauncherActivity/.CustomLauncherActivity/g' "$MANIFEST_FILE"
+        sed -i '' 's/com\.google\.androidbrowserhelper\.trusted\.LauncherActivity/.CustomLauncherActivity/g' "$MANIFEST_FILE"
     else
         # Linux
-        sed -i 's/com\.nicooloo\.nicooloo\.trusted\.LauncherActivity/.CustomLauncherActivity/g' "$MANIFEST_FILE"
+        sed -i 's/com\.google\.androidbrowserhelper\.trusted\.LauncherActivity/.CustomLauncherActivity/g' "$MANIFEST_FILE"
     fi
     echo -e "${GREEN}AndroidManifest.xml updated successfully${NC}"
 else

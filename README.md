@@ -5,6 +5,7 @@ A production-ready, mobile-optimized Progressive Web App template for Solana wit
 ![Solana Mobile PWA](https://img.shields.io/badge/Solana-Mobile-9945FF?style=for-the-badge&logo=solana)
 ![Next.js 14](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
 ## Features
 
@@ -13,15 +14,28 @@ A production-ready, mobile-optimized Progressive Web App template for Solana wit
 - **Chrome Browser Preference** - Custom TWA config that defaults to Chrome
 - **Safe Area Support** - Proper handling of notches, gesture bars, and curved edges
 - **Bottom Navigation** - Mobile-intuitive navigation with 48dp+ touch targets
+- **Pull-to-Refresh** - Native-feeling gesture support
+- **Framer Motion Animations** - Smooth, performant UI animations
 - **PWA Ready** - Installable as a native-like app on any device
 - **Bubblewrap Integration** - Complete TWA configuration for dApp Store publishing
+- **CLI Scaffolding** - Quick project setup with `npx create-solana-pwa`
 
 ## Quick Start
 
+### Using the CLI (Recommended)
+
+```bash
+npx create-solana-pwa my-dapp
+cd my-dapp
+npm run dev
+```
+
+### Manual Setup
+
 ```bash
 # Clone the template
-git clone https://github.com/your-username/solana-mobile-pwa-template.git
-cd solana-mobile-pwa-template
+git clone https://github.com/[username]/solana-mobile-pwa-template.git my-dapp
+cd my-dapp
 
 # Install dependencies
 npm install
@@ -37,48 +51,65 @@ Open [http://localhost:3000](http://localhost:3000) on your mobile device or emu
 ```
 solana-mobile-pwa-template/
 ├── src/
-│   ├── app/                      # Next.js App Router pages
-│   │   ├── layout.tsx            # Root layout with PWA meta tags
-│   │   ├── page.tsx              # Home page
-│   │   ├── wallet/page.tsx       # Wallet page
-│   │   ├── send/page.tsx         # Send SOL page
-│   │   └── settings/page.tsx     # Settings page
+│   ├── app/                          # Next.js App Router pages
+│   │   ├── layout.tsx                # Root layout with PWA meta tags
+│   │   ├── page.tsx                  # Home page
+│   │   ├── wallet/page.tsx           # Wallet page
+│   │   ├── send/page.tsx             # Send SOL page
+│   │   └── settings/page.tsx         # Settings page
 │   │
 │   ├── components/
 │   │   ├── navigation/
-│   │   │   ├── BottomNav.tsx     # Mobile bottom navigation
-│   │   │   └── Header.tsx        # Page header with back button
+│   │   │   ├── BottomNav.tsx         # Mobile bottom navigation
+│   │   │   └── Header.tsx            # Page header with back button
 │   │   │
 │   │   ├── splash/
-│   │   │   └── SplashScreen.tsx  # Animated splash screen
+│   │   │   ├── SplashScreen.tsx      # CSS-based splash screen
+│   │   │   └── AnimatedSplashScreen.tsx  # Framer Motion splash
 │   │   │
-│   │   └── wallet/
-│   │       ├── WalletProvider.tsx # Wallet context setup
-│   │       └── WalletButton.tsx   # Connect/disconnect button
+│   │   ├── wallet/
+│   │   │   ├── WalletProvider.tsx    # Wallet context setup
+│   │   │   └── WalletButton.tsx      # Connect/disconnect button
+│   │   │
+│   │   └── ui/
+│   │       ├── Toast.tsx             # Toast notifications
+│   │       ├── PullToRefresh.tsx     # Pull-to-refresh gesture
+│   │       └── AnimatedComponents.tsx # Animation component library
 │   │
 │   ├── hooks/
-│   │   └── useSafeArea.ts        # Safe area insets hook
+│   │   ├── useSafeArea.ts            # Safe area insets hook
+│   │   └── usePullToRefresh.ts       # Pull gesture hook
 │   │
 │   └── styles/
-│       ├── mobile.css            # Mobile-first styles
-│       └── splash.css            # Splash screen animations
+│       ├── mobile.css                # Mobile-first styles
+│       └── splash.css                # Splash screen animations
 │
 ├── public/
-│   ├── manifest.json             # PWA web manifest
-│   ├── icons/                    # App icons (all sizes)
+│   ├── manifest.json                 # PWA web manifest
+│   ├── icons/                        # App icons (all sizes)
 │   └── .well-known/
-│       └── assetlinks.json       # Digital Asset Links for TWA
+│       └── assetlinks.json           # Digital Asset Links for TWA
 │
-├── twa/                          # Bubblewrap TWA configuration
-│   ├── twa-manifest.json         # TWA configuration
-│   ├── CustomLauncherActivity.java  # Chrome preference activity
+├── twa/                              # Bubblewrap TWA configuration
+│   ├── twa-manifest.json             # TWA configuration
+│   ├── CustomLauncherActivity.java   # Chrome preference activity
 │   └── scripts/
-│       └── build-twa.sh          # Build script
+│       └── build-twa.sh              # Build script
 │
-└── docs/
-    ├── SETUP.md                  # Detailed setup guide
-    ├── TWA-GUIDE.md              # TWA/Bubblewrap guide
-    └── PUBLISHING.md             # dApp Store publishing guide
+├── cli/                              # CLI scaffolding tool
+│   ├── index.js                      # npx create-solana-pwa
+│   ├── package.json                  # npm package config
+│   └── README.md                     # CLI documentation
+│
+├── docs/
+│   ├── SETUP.md                      # Detailed setup guide
+│   ├── TWA-GUIDE.md                  # TWA/Bubblewrap guide
+│   ├── CUSTOMIZATION.md              # Theming and customization
+│   ├── PUBLISHING.md                 # dApp Store publishing guide
+│   └── VIDEO-WALKTHROUGH.md          # Video tutorial scripts
+│
+├── PROPOSAL.md                       # RFP grant proposal
+└── package.json                      # Dependencies
 ```
 
 ## Key Features Explained
@@ -242,13 +273,64 @@ Edit `src/components/wallet/WalletProvider.tsx`:
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS + CSS Variables
-- **Wallet**: @solana-mobile/wallet-adapter-mobile
-- **Web3**: @solana/web3.js
-- **Icons**: Lucide React
-- **TWA**: Bubblewrap CLI
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS + CSS Variables |
+| Animations | Framer Motion |
+| Wallet | @solana-mobile/wallet-adapter-mobile |
+| Web3 | @solana/web3.js |
+| Icons | Lucide React |
+| TWA | Bubblewrap CLI (@bubblewrap/cli) |
+| PWA | next-pwa |
+
+## Animated Components
+
+The template includes a comprehensive animation library built with Framer Motion:
+
+```tsx
+import {
+  PageTransition,
+  AnimatedCard,
+  AnimatedButton,
+  BottomSheet,
+  AnimatedToast,
+  AnimatedSpinner,
+  Skeleton,
+  AnimatedNumber,
+  Presence,
+} from '@/components/ui/AnimatedComponents';
+
+// Page transitions
+<PageTransition>
+  <MyPage />
+</PageTransition>
+
+// Cards with hover effects
+<AnimatedCard onClick={handleClick}>
+  <CardContent />
+</AnimatedCard>
+
+// Bottom sheet modals
+<BottomSheet isOpen={isOpen} onClose={handleClose}>
+  <SheetContent />
+</BottomSheet>
+```
+
+## Pull-to-Refresh
+
+Native-feeling pull gesture support:
+
+```tsx
+import { PullToRefresh } from '@/components/ui/PullToRefresh';
+
+<PullToRefresh onRefresh={async () => {
+  await refetchData();
+}}>
+  <YourContent />
+</PullToRefresh>
+```
 
 ## Contributing
 
@@ -262,7 +344,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 - [Solana Mobile Documentation](https://docs.solanamobile.com)
 - [Mobile Wallet Adapter](https://github.com/solana-mobile/mobile-wallet-adapter)
-- [Bubblewrap CLI](https://github.com/nicooloo/nicooloo/nicooloo)
+- [Bubblewrap CLI](https://github.com/GoogleChromeLabs/bubblewrap)
 - [TWA Quick Start](https://developer.chrome.com/docs/android/trusted-web-activity/quick-start)
 
 ---

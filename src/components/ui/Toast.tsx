@@ -61,23 +61,13 @@ function ToastContainer({
   if (toasts.length === 0) return null;
 
   return (
-    <div className="toast-container">
+    <div
+      className="fixed left-4 right-4 flex flex-col gap-2 z-[1000] pointer-events-none"
+      style={{ bottom: 'calc(var(--nav-height, 56px) + var(--sab, 0px) + 16px)' }}
+    >
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onDismiss={onDismiss} />
       ))}
-      <style jsx>{`
-        .toast-container {
-          position: fixed;
-          bottom: calc(var(--nav-height, 56px) + var(--sab, 0px) + 16px);
-          left: 16px;
-          right: 16px;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          z-index: 1000;
-          pointer-events: none;
-        }
-      `}</style>
     </div>
   );
 }
@@ -97,32 +87,18 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
 
   return (
     <div
-      className={`toast-item flex items-center gap-3 px-4 py-3 rounded-xl border ${bgColors[toast.type]} backdrop-blur-lg pointer-events-auto`}
-      style={{
-        background: 'var(--color-surface-elevated)',
-        animation: 'slideUp 0.3s ease-out',
-      }}
+      className={`flex items-center gap-3 px-4 py-3 rounded-xl border backdrop-blur-lg pointer-events-auto animate-[slideUp_0.3s_ease-out] ${bgColors[toast.type]}`}
+      style={{ background: 'var(--color-surface-elevated)' }}
     >
       {icons[toast.type]}
       <span className="flex-1 text-sm">{toast.message}</span>
       <button
         onClick={() => onDismiss(toast.id)}
         className="touchable p-1 rounded-full hover:bg-white/10"
+        aria-label="Dismiss"
       >
         <X size={16} />
       </button>
-      <style jsx>{`
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
 }

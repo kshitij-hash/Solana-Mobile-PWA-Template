@@ -1,6 +1,29 @@
 {
   "name": "solana-mobile-pwa-template",
   "version": "0.1.0",
+  "description": "A production-ready PWA template for Solana Mobile dApps with Mobile Wallet Adapter integration",
+  "license": "MIT",
+  "author": "Solana Mobile Community",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solana-mobile/solana-mobile-pwa-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/solana-mobile/solana-mobile-pwa-template/issues"
+  },
+  "homepage": "https://github.com/solana-mobile/solana-mobile-pwa-template#readme",
+  "keywords": [
+    "solana",
+    "solana-mobile",
+    "pwa",
+    "progressive-web-app",
+    "mobile-wallet-adapter",
+    "mwa",
+    "next.js",
+    "react",
+    "web3",
+    "template"
+  ],
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,12 +35,14 @@
   },
   "dependencies": {
     "@solana-mobile/wallet-adapter-mobile": "^2.2.5",
+    "@solana-mobile/wallet-standard-mobile": "^0.4.4",
     "@solana/wallet-adapter-base": "^0.9.27",
     "@solana/wallet-adapter-react": "^0.15.39",
     "@solana/wallet-adapter-react-ui": "^0.9.39",
     "@solana/web3.js": "^1.98.4",
+    "framer-motion": "^11.0.0",
     "lucide-react": "^0.556.0",
-    "next": "16.0.8",
+    "next": "^16.0.10",
     "next-pwa": "^5.6.0",
     "react": "19.2.1",
     "react-dom": "19.2.1"

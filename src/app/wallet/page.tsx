@@ -5,11 +5,13 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { useState, useEffect, useCallback } from 'react';
 import { Header } from '@/components/navigation/Header';
 import { WalletButton } from '@/components/wallet/WalletButton';
+import { useNetwork } from '@/contexts/NetworkContext';
 import { RefreshCw } from 'lucide-react';
 
 export default function WalletPage() {
   const { publicKey, connected } = useWallet();
   const { connection } = useConnection();
+  const { networkName } = useNetwork();
   const [balance, setBalance] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -67,7 +69,7 @@ export default function WalletPage() {
             {/* Network Info */}
             <div className="card">
               <h3 className="font-semibold mb-2">Network</h3>
-              <p className="text-sm text-(--color-text-secondary)">Devnet</p>
+              <p className="text-sm text-(--color-text-secondary)">{networkName}</p>
             </div>
           </div>
         ) : (
