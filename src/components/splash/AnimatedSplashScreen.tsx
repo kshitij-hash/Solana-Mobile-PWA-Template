@@ -111,24 +111,6 @@ export function AnimatedSplashScreen({
             ))}
           </motion.div>
 
-          {/* Footer */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            style={{
-              position: 'absolute',
-              bottom: 40,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              color: '#888',
-              fontSize: 14,
-            }}
-          >
-            <span>Powered by</span>
-            <SolanaTextLogo />
-          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -204,12 +186,3 @@ function SolanaLogo() {
   );
 }
 
-function SolanaTextLogo() {
-  return (
-    <svg height="16" viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="0" y="15" fill="#888" fontSize="14" fontWeight="600">
-        SOLANA
-      </text>
-    </svg>
-  );
-}
