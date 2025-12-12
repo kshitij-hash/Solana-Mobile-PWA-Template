@@ -47,7 +47,7 @@ npx create-solana-pwa my-dapp --no-git
 
 The generated project includes:
 
-- **Next.js 14** with App Router
+- **Next.js 16** with App Router
 - **TypeScript** configuration
 - **Mobile Wallet Adapter** integration
 - **PWA** with service worker caching

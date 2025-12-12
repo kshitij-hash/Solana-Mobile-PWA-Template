@@ -7,7 +7,8 @@
     "create-solana-pwa": "./index.js"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "README.md"
   ],
   "keywords": [
     "solana",
@@ -28,13 +29,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/solana-mobile/solana-mobile-pwa-template.git",
+    "url": "git+https://github.com/kshitij-hash/Solana-Mobile-PWA-Template.git",
     "directory": "cli"
   },
   "bugs": {
-    "url": "https://github.com/solana-mobile/solana-mobile-pwa-template/issues"
+    "url": "https://github.com/kshitij-hash/Solana-Mobile-PWA-Template/issues"
   },
-  "homepage": "https://github.com/solana-mobile/solana-mobile-pwa-template#readme",
+  "homepage": "https://github.com/kshitij-hash/Solana-Mobile-PWA-Template#readme",
   "engines": {
     "node": ">=18.0.0"
   }

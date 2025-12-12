@@ -109,7 +109,7 @@ ${colors.cyan}Examples:${colors.reset}
   npx create-solana-pwa my-dapp --yarn
 
 ${colors.cyan}Features:${colors.reset}
-  • Next.js 14 with App Router
+  • Next.js 16 with App Router
   • Mobile Wallet Adapter (MWA) integration
   • PWA with service worker caching
   • Safe area handling for mobile devices
@@ -188,12 +188,13 @@ ${colors.magenta}╚════════════════════
   try {
     // Clone the template repository
     execSync(
-      `git clone --depth 1 https://github.com/solana-mobile/solana-mobile-pwa-template.git "${projectPath}"`,
+      `git clone --depth 1 https://github.com/kshitij-hash/Solana-Mobile-PWA-Template.git "${projectPath}"`,
       { stdio: 'pipe' }
     );
 
-    // Remove .git directory from cloned repo
+    // Remove .git directory and cli directory from cloned repo
     execSync(`rm -rf "${join(projectPath, '.git')}"`, { stdio: 'pipe' });
+    execSync(`rm -rf "${join(projectPath, 'cli')}"`, { stdio: 'pipe' });
 
     logSuccess('Template cloned successfully');
   } catch (error) {

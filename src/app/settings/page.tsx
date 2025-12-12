@@ -89,7 +89,7 @@ export default function SettingsPage() {
                 <ExternalLink size={16} className="text-(--color-text-secondary)" />
               </a>
               <a
-                href="https://github.com/solana-mobile"
+                href="https://github.com/kshitij-hash/Solana-Mobile-PWA-Template"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between py-2 touchable"

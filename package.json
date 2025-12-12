@@ -6,12 +6,12 @@
   "author": "Solana Mobile Community",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/solana-mobile/solana-mobile-pwa-template.git"
+    "url": "git+https://github.com/kshitij-hash/Solana-Mobile-PWA-Template.git"
   },
   "bugs": {
-    "url": "https://github.com/solana-mobile/solana-mobile-pwa-template/issues"
+    "url": "https://github.com/kshitij-hash/Solana-Mobile-PWA-Template/issues"
   },
-  "homepage": "https://github.com/solana-mobile/solana-mobile-pwa-template#readme",
+  "homepage": "https://github.com/kshitij-hash/Solana-Mobile-PWA-Template#readme",
   "keywords": [
     "solana",
     "solana-mobile",
