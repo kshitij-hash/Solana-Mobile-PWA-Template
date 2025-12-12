@@ -2,10 +2,13 @@
 
 A production-ready, mobile-optimized Progressive Web App template for Solana with Mobile Wallet Adapter (MWA) integration. Built for the Solana Mobile ecosystem.
 
+[![npm version](https://img.shields.io/npm/v/create-solana-pwa?style=for-the-badge&logo=npm&color=CB3837)](https://www.npmjs.com/package/create-solana-pwa)
 ![Solana Mobile PWA](https://img.shields.io/badge/Solana-Mobile-9945FF?style=for-the-badge&logo=solana)
-![Next.js 14](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![Next.js 16](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+
+**[Live Demo](https://solana-pwa-template.vercel.app)** · **[npm Package](https://www.npmjs.com/package/create-solana-pwa)** · **[GitHub](https://github.com/kshitij-hash/Solana-Mobile-PWA-Template)**
 
 ## Features
 
@@ -34,7 +37,7 @@ npm run dev
 
 ```bash
 # Clone the template
-git clone https://github.com/[username]/solana-mobile-pwa-template.git my-dapp
+git clone https://github.com/kshitij-hash/Solana-Mobile-PWA-Template.git my-dapp
 cd my-dapp
 
 # Install dependencies
@@ -275,7 +278,7 @@ Edit `src/components/wallet/WalletProvider.tsx`:
 
 | Layer | Technology |
 |-------|------------|
-| Framework | Next.js 14 (App Router) |
+| Framework | Next.js 16 (App Router) |
 | Language | TypeScript |
 | Styling | Tailwind CSS + CSS Variables |
 | Animations | Framer Motion |
