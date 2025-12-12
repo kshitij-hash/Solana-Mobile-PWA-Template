@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Documentation for Solana Mobile PWA Template",
   "type": "module",
+  "engines": {
+    "node": ">=18 <24"
+  },
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
