@@ -164,8 +164,6 @@ MWA works with any Solana mobile wallet that implements the protocol:
 
 - **Phantom** - Popular multi-chain wallet
 - **Solflare** - Solana-native wallet
-- **Backpack** - Multi-chain with xNFT support
-- **Glow** - Simple Solana wallet
 
 ## Testing
 
@@ -179,7 +177,7 @@ MWA works with any Solana mobile wallet that implements the protocol:
 
 1. Install wallet from Play Store
 2. Connect to the same network as your dApp
-3. Test with real transactions on devnet
+3. Test transaction on devnet
 
 ## Best Practices
 

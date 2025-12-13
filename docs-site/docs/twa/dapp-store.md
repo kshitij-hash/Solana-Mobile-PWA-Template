@@ -43,7 +43,7 @@ twa/app-release-bundle.aab
 
 ### 1. Create Publisher Account
 
-1. Visit [dApp Store Publisher Portal](https://publisher.solanamobile.com)
+1. Visit [dApp Store Publisher Portal](https://publish.solanamobile.com)
 2. Connect your Solana wallet
 3. Complete publisher profile
 

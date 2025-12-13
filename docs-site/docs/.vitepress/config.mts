@@ -127,7 +127,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/kshitij-hash/Solana-Mobile-PWA-Template/edit/main/docs-site/:path',
+      pattern: 'https://github.com/kshitij-hash/Solana-Mobile-PWA-Template/edit/main/docs-site/docs/:path',
       text: 'Edit this page on GitHub'
     }
   }

@@ -15,7 +15,7 @@ Trusted Web Activity (TWA) is an Android feature that allows you to wrap a PWA i
 
 ```
 ┌─────────────────────────────────────┐
-│           Android App (TWA)          │
+│           Android App (TWA)         │
 │  ┌───────────────────────────────┐  │
 │  │                               │  │
 │  │     Chrome Custom Tab         │  │
@@ -40,7 +40,7 @@ Trusted Web Activity (TWA) is an Android feature that allows you to wrap a PWA i
 
 ### For Building
 
-- **Node.js** 18+
+- **Node.js** 20+
 - **Java JDK** 17
 - **Bubblewrap CLI** (`npm install -g @bubblewrap/cli`)
 

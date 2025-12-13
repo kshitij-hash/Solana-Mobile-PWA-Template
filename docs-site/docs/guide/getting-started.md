@@ -4,7 +4,7 @@ Get up and running with the Solana Mobile PWA Template in minutes.
 
 ## Prerequisites
 
-- **Node.js** 18.0.0 or higher
+- **Node.js** 20.0.0 or higher
 - **npm**, **yarn**, or **pnpm**
 - A mobile device or emulator for testing
 

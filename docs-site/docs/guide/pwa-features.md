@@ -45,8 +45,6 @@ The template uses `next-pwa` for service worker management:
 
 - **Precaching** - App shell cached on install
 - **Runtime caching** - API responses cached
-- **Offline fallback** - Works without internet
-- **Background sync** - Queues failed requests
 
 ### Configuration
 

@@ -4,7 +4,7 @@ Configure your TWA project with Bubblewrap.
 
 ## Prerequisites
 
-- **Node.js** 18+
+- **Node.js** 20+
 - **Java JDK** 17 (Bubblewrap can install this)
 - **Your PWA deployed** with HTTPS and valid manifest
 

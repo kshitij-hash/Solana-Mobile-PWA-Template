@@ -251,9 +251,9 @@ adb shell ping your-domain.com
 
 ## Getting Help
 
-1. **Check Bubblewrap issues:** [GitHub Issues](https://github.com/nicetransition/niceweb-browser-helper/issues)
+1. **Check Bubblewrap issues:** [GitHub Issues](https://github.com/GoogleChromeLabs/bubblewrap/issues)
 
-2. **Solana Mobile Discord:** Community support
+2. **Solana Mobile Discord:** [Community support](https://discord.gg/solanamobile)
 
 3. **Chrome TWA docs:** [developer.chrome.com](https://developer.chrome.com/docs/android/trusted-web-activity)
 
