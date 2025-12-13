@@ -55,7 +55,22 @@ npx create-solana-pwa my-dapp --no-git
 - **Safe area handling** for mobile devices
 - **Bottom navigation** with 48dp touch targets
 - **Pull-to-refresh** gesture support
-- **Bubblewrap TWA** configuration for Android app
+- **TWA scripts** for building Android APK (Solana dApp Store ready)
+
+## Building TWA (Android App)
+
+After creating your project:
+
+```bash
+cd my-dapp/twa
+./scripts/init-twa.sh
+```
+
+This interactive script will:
+- Configure your app (name, package ID, host URL)
+- Generate signing keystore
+- Update Digital Asset Links (assetlinks.json)
+- Build signed APK ready for Solana dApp Store
 
 ## Documentation
 

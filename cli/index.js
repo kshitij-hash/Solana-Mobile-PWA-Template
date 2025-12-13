@@ -234,14 +234,14 @@ ${colors.magenta}╚════════════════════
     logSuccess('Updated manifest.json');
   }
 
-  // Update TWA manifest with project name
-  const twaManifestPath = join(projectPath, 'twa', 'twa-manifest.json');
+  // Update TWA manifest template with project name
+  const twaManifestPath = join(projectPath, 'twa', 'twa-manifest.template.json');
   if (existsSync(twaManifestPath)) {
     const twaManifest = JSON.parse(readFileSync(twaManifestPath, 'utf-8'));
     twaManifest.name = projectName;
     twaManifest.launcherName = projectName;
     writeFileSync(twaManifestPath, JSON.stringify(twaManifest, null, 2));
-    logSuccess('Updated twa-manifest.json');
+    logSuccess('Updated twa-manifest.template.json');
   }
 
   // Update network configuration if specified
@@ -317,7 +317,7 @@ ${colors.bold}Build for production:${colors.reset}
 
 ${colors.bold}Build TWA (Android app):${colors.reset}
 
-  ${colors.cyan}cd twa && ./scripts/build-twa.sh${colors.reset}
+  ${colors.cyan}cd twa && ./scripts/init-twa.sh${colors.reset}
 
 ${colors.bold}Documentation:${colors.reset}
 
