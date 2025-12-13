@@ -1,73 +1,70 @@
 /**
- * Custom LauncherActivity that forces Chrome as the TWA browser provider.
+ * Custom LauncherActivity for Solana Mobile PWA TWA.
  *
- * This is the KEY SOLUTION for the RFP requirement:
- * "Default to Chrome browser, fall back to system default"
+ * This activity extends the default LauncherActivity to provide any
+ * customizations needed for Solana Mobile dApps.
  *
- * Bubblewrap does NOT have a built-in option to force Chrome as the TWA provider.
- * This custom activity extends the android-browser-helper library to explicitly
- * prefer Chrome, with automatic fallback to the system default browser.
+ * NOTE: The android-browser-helper library automatically prefers Chrome
+ * for TWAs when available. The TwaProviderPicker class internally checks
+ * for installed browsers and selects Chrome by default.
+ *
+ * This custom activity can be used for:
+ * - Custom URL handling via getLaunchingUrl()
+ * - Custom splash screen behavior
+ * - Adding query parameters or handling deep links
  *
  * USAGE:
  * 1. Copy this file to: app/src/main/java/[your-package-path]/
- * 2. Update AndroidManifest.xml to use CustomLauncherActivity instead of LauncherActivity
- * 3. Build with: ./gradlew assembleRelease
+ * 2. Update package name to match your app
+ * 3. Update AndroidManifest.xml to use CustomLauncherActivity
  */
 package com.solanapwa.template;
 
-import android.content.pm.PackageManager;
+import android.content.pm.ActivityInfo;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.androidbrowserhelper.trusted.LauncherActivity;
 
 /**
- * Custom LauncherActivity that prioritizes Chrome for TWA.
- * Falls back to system default if Chrome is not available.
+ * Custom LauncherActivity for Solana Mobile PWA.
+ *
+ * Chrome is automatically preferred by the android-browser-helper library
+ * when it's installed, which is required for Mobile Wallet Adapter (MWA)
+ * to work properly on Android.
  */
 public class CustomLauncherActivity extends LauncherActivity {
 
     private static final String TAG = "CustomLauncherActivity";
 
-    // Chrome package names in order of preference
-    private static final String[] CHROME_PACKAGES = {
-        "com.android.chrome",           // Stable Chrome
-        "com.chrome.beta",              // Chrome Beta
-        "com.chrome.dev",               // Chrome Dev
-        "com.chrome.canary"             // Chrome Canary
-    };
-
-    /**
-     * Override to specify Chrome as the preferred TWA provider.
-     *
-     * @return The package name of the preferred browser, or null to use default behavior
-     */
     @Override
-    protected String getProviderPackage() {
-        // Try each Chrome variant in order of preference
-        for (String chromePackage : CHROME_PACKAGES) {
-            if (isPackageInstalled(chromePackage)) {
-                Log.d(TAG, "Using Chrome package: " + chromePackage);
-                return chromePackage;
-            }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Setting an orientation crashes the app due to the transparent background on Android 8.0
+        // Oreo and below. We only set the orientation on Oreo and above.
+        // See https://github.com/GoogleChromeLabs/bubblewrap/issues/496 for details.
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
 
-        // Chrome not found - fall back to default system browser
-        Log.d(TAG, "Chrome not found, falling back to system default");
-        return null; // null triggers default behavior (system default browser)
+        Log.d(TAG, "CustomLauncherActivity started");
     }
 
-    /**
-     * Check if a package is installed on the device.
-     *
-     * @param packageName The package name to check
-     * @return true if installed, false otherwise
-     */
-    private boolean isPackageInstalled(String packageName) {
-        try {
-            getPackageManager().getPackageInfo(packageName, 0);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
+    @Override
+    protected Uri getLaunchingUrl() {
+        // Get the original launch URL
+        Uri uri = super.getLaunchingUrl();
+
+        // You can customize the launch URL here if needed
+        // For example, adding query parameters:
+        // uri = uri.buildUpon().appendQueryParameter("source", "twa").build();
+
+        Log.d(TAG, "Launching URL: " + uri.toString());
+        return uri;
     }
 }

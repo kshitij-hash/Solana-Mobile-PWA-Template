@@ -49,12 +49,32 @@ next-env.d.ts
 # OS
 Thumbs.db
 
-# TWA - ignore everything except essential template files
-twa/*
-!twa/twa-manifest.json
-!twa/CustomLauncherActivity.java
-!twa/scripts/
-!twa/scripts/build-twa.sh
+# MCP cache
+docs-cache/
+
+# TWA - ignore build artifacts and user-generated config
+twa/app/
+twa/build/
+twa/.gradle/
+twa/gradle/
+twa/gradlew
+twa/gradlew.bat
+twa/build.gradle
+twa/settings.gradle
+twa/gradle.properties
+twa/*.apk
+twa/*.aab
+twa/*.idsig
+twa/android.keystore
+twa/store_icon.png
+twa/manifest-checksum.txt
+twa/twa-manifest.json
+
+# Keep these TWA template files:
+# - twa/twa-manifest.template.json (template)
+# - twa/CustomLauncherActivity.java
+# - twa/scripts/*.sh
+# - twa/README.md
 
 # Docs site
 docs-site/node_modules/
