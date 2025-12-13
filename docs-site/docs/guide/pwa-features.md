@@ -1,151 +1,83 @@
 # PWA Features
 
-The template is a fully-featured Progressive Web App with offline support, installability, and native-like behavior.
+The template is a Progressive Web App with offline support, installability, and native-like behavior.
 
 ## Installation
 
-### On Mobile (Chrome)
+### Manual Install
 
+**On Mobile (Chrome):**
 1. Open your deployed PWA in Chrome
 2. Tap the browser menu (⋮)
 3. Select "Add to Home Screen"
-4. The app installs with your icon and name
 
-### On Desktop
-
+**On Desktop:**
 1. Open the PWA in Chrome
 2. Click the install icon in the address bar
-3. Or use the menu: ⋮ → "Install app"
 
-## Programmatic Install Prompt
+### Programmatic Install
 
-Use the included hook to show a custom install prompt:
+Use the included `usePWAInstall` hook:
 
 ```tsx
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 
-function InstallButton() {
-  const { canInstall, install } = usePWAInstall();
+function InstallBanner() {
+  const { isInstallable, isInstalled, promptInstall } = usePWAInstall();
 
-  if (!canInstall) return null;
+  // Already installed as PWA
+  if (isInstalled) return null;
+
+  // Can't be installed (not supported or already prompted)
+  if (!isInstallable) return null;
 
   return (
-    <button onClick={install}>
+    <button onClick={promptInstall}>
       Install App
     </button>
   );
 }
 ```
 
-## Service Worker
+The hook provides:
+- `isInstallable` - Browser supports install and prompt is available
+- `isInstalled` - Running as installed PWA (standalone mode)
+- `promptInstall()` - Trigger the install prompt
 
-The template uses `next-pwa` for service worker management:
+## Service Worker & Caching
 
-### Features
+The template uses `next-pwa` with pre-configured caching strategies:
 
-- **Precaching** - App shell cached on install
-- **Runtime caching** - API responses cached
+| Content | Strategy | Cache Duration |
+|---------|----------|----------------|
+| Solana API | NetworkFirst | 5 minutes |
+| Images | CacheFirst | 30 days |
+| Fonts | CacheFirst | 1 year |
+| JS/CSS | StaleWhileRevalidate | 7 days |
 
 ### Configuration
 
-Edit `next.config.js`:
+Edit `next.config.ts` to customize caching:
 
-```js
-const withPWA = require('next-pwa')({
+```ts
+const withPWA = withPWAInit({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
-  register: true,
-  skipWaiting: true,
   runtimeCaching: [
     {
-      urlPattern: /^https:\/\/api\.mainnet-beta\.solana\.com/,
+      urlPattern: /^https:\/\/api\..*\.solana\.com/,
       handler: 'NetworkFirst',
       options: {
-        cacheName: 'solana-api',
+        cacheName: 'solana-api-cache',
         expiration: {
           maxEntries: 50,
-          maxAgeSeconds: 60, // 1 minute
+          maxAgeSeconds: 60 * 5,
         },
       },
     },
+    // Add more patterns...
   ],
 });
-```
-
-## Standalone Detection
-
-Detect if running as installed PWA:
-
-```tsx
-function useStandalone() {
-  const [isStandalone, setIsStandalone] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(display-mode: standalone)');
-    setIsStandalone(mediaQuery.matches);
-
-    const handler = (e) => setIsStandalone(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
-
-  return isStandalone;
-}
-```
-
-## Web App Manifest
-
-Located at `public/manifest.json`:
-
-```json
-{
-  "name": "Solana Mobile PWA",
-  "short_name": "SolanaPWA",
-  "description": "Mobile-optimized Solana PWA",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#9945FF",
-  "theme_color": "#9945FF",
-  "orientation": "portrait-primary",
-  "icons": [...],
-  "shortcuts": [
-    {
-      "name": "Connect Wallet",
-      "url": "/wallet",
-      "icons": [...]
-    }
-  ]
-}
-```
-
-### Display Modes
-
-| Mode | Description |
-|------|-------------|
-| `standalone` | App-like, no browser UI |
-| `fullscreen` | No status bar (games) |
-| `minimal-ui` | Minimal browser controls |
-| `browser` | Regular browser tab |
-
-## Notifications
-
-Request permission and send notifications:
-
-```tsx
-async function requestNotificationPermission() {
-  const permission = await Notification.requestPermission();
-  return permission === 'granted';
-}
-
-function sendNotification(title: string, body: string) {
-  if (Notification.permission === 'granted') {
-    new Notification(title, {
-      body,
-      icon: '/icons/icon-192x192.png',
-      badge: '/icons/icon-72x72.png',
-    });
-  }
-}
 ```
 
 ## Offline Support
@@ -153,10 +85,14 @@ function sendNotification(title: string, body: string) {
 ### Checking Online Status
 
 ```tsx
+import { useState, useEffect } from 'react';
+
 function useOnlineStatus() {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
+    setIsOnline(navigator.onLine);
+
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
@@ -176,56 +112,92 @@ function useOnlineStatus() {
 ### Offline UI
 
 ```tsx
-function App() {
+function OfflineBanner() {
   const isOnline = useOnlineStatus();
 
-  if (!isOnline) {
-    return (
-      <div className="offline-banner">
-        You're offline. Some features may be unavailable.
-      </div>
-    );
+  if (isOnline) return null;
+
+  return (
+    <div className="fixed top-0 inset-x-0 bg-yellow-500 text-black text-center py-2">
+      You're offline. Some features may be unavailable.
+    </div>
+  );
+}
+```
+
+::: tip
+Cached pages and assets remain available offline. Wallet transactions require network connectivity.
+:::
+
+## Notifications
+
+Request permission and send notifications:
+
+```tsx
+async function enableNotifications() {
+  if (!('Notification' in window)) {
+    console.log('Notifications not supported');
+    return false;
   }
 
-  return <MainApp />;
+  const permission = await Notification.requestPermission();
+  return permission === 'granted';
+}
+
+function sendNotification(title: string, body: string) {
+  if (Notification.permission !== 'granted') return;
+
+  new Notification(title, {
+    body,
+    icon: '/icons/icon-192x192.png',
+  });
 }
 ```
 
-## App Shortcuts
+::: warning
+Request notification permission only after user interaction (e.g., button click). Prompting on page load leads to high denial rates.
+:::
 
-Define shortcuts in `manifest.json`:
+## Standalone Detection
 
-```json
-{
-  "shortcuts": [
-    {
-      "name": "Connect Wallet",
-      "short_name": "Wallet",
-      "description": "Connect your Solana wallet",
-      "url": "/wallet",
-      "icons": [
-        {
-          "src": "/icons/icon-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Send SOL",
-      "short_name": "Send",
-      "url": "/send",
-      "icons": [...]
-    }
-  ]
+Check if running as installed PWA:
+
+```tsx
+function useIsStandalone() {
+  const [isStandalone, setIsStandalone] = useState(false);
+
+  useEffect(() => {
+    const standalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (navigator as any).standalone === true;
+
+    setIsStandalone(standalone);
+  }, []);
+
+  return isStandalone;
 }
 ```
 
-Users can long-press the app icon to see shortcuts.
+Or use the `isInstalled` property from `usePWAInstall`.
 
-## Best Practices
+## Testing
 
-1. **Test offline mode** - Disconnect network and verify behavior
-2. **Optimize caching** - Cache critical resources, not everything
-3. **Handle updates** - Show "Update available" prompts
-4. **Test installation** - Verify icons and name display correctly
-5. **Monitor service worker** - Check DevTools → Application → Service Workers
+### Service Worker
+
+1. Build for production: `npm run build`
+2. Start: `npm run start`
+3. Open DevTools → Application → Service Workers
+4. Verify service worker is registered
+
+### Offline Mode
+
+1. DevTools → Network → Check "Offline"
+2. Verify cached pages load
+3. Verify offline UI appears
+
+### Installation
+
+1. Deploy to HTTPS host
+2. Open in Chrome
+3. Verify install prompt appears
+4. Test installed app behavior

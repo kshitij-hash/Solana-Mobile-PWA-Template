@@ -1,116 +1,97 @@
 # Building TWA
 
-Generate your Android APK and App Bundle.
+Generate your Android APK after initial setup.
 
-## Quick Build
+## Rebuild APK
 
-After [setup](/twa/setup), build with:
+After [initial setup](/twa/setup), use the build script for subsequent builds:
 
 ```bash
 cd twa
-bubblewrap build
-```
-
-This generates:
-- `app-release-signed.apk` - For direct installation
-- `app-release-bundle.aab` - For Play Store/dApp Store
-
-## Build Script
-
-The template includes an automated build script:
-
-```bash
 ./scripts/build-twa.sh
 ```
 
-This script:
-1. Runs `bubblewrap build`
-2. Copies `CustomLauncherActivity.java` for Chrome preference
-3. Updates `AndroidManifest.xml`
-4. Builds the final APK
+This generates:
+- `app-release-signed.apk` - For direct installation and dApp Store
 
-## Password Prompts
+## What the Build Script Does
 
-During build, you'll be prompted for passwords:
+1. Validates `twa-manifest.json` exists
+2. Checks keystore is present
+3. Runs Bubblewrap build
+4. Copies `CustomLauncherActivity.java` to Android project
+5. Updates package name in activity file
+6. Builds signed APK
 
+## Password Handling
+
+Set environment variables to avoid password prompts:
+
+```bash
+export BUBBLEWRAP_KEYSTORE_PASSWORD="your-password"
+export BUBBLEWRAP_KEY_PASSWORD="your-password"
+./scripts/build-twa.sh
 ```
-Please, enter passwords for the keystore and alias android.
 
-? Password for the Key Store: ********
-? Password for the Key: ********
-```
-
-Enter the passwords you set during keystore creation.
-
-## Build Output
-
-Successful build shows:
-
-```
-Building the Android App...
-  - Generated Android APK at ./app-release-signed.apk
-  - Generated Android App Bundle at ./app-release-bundle.aab
-```
+Or enter passwords when prompted during build.
 
 ## Testing the APK
 
-### On Connected Device
+### Install via ADB
 
 ```bash
 adb install app-release-signed.apk
 ```
 
-### On Emulator
-
-```bash
-# List available emulators
-emulator -list-avds
-
-# Start emulator
-emulator -avd Pixel_6_API_34
-
-# Install APK
-adb install app-release-signed.apk
-```
-
-### Transfer to Phone
+### Install via File Transfer
 
 1. Connect phone via USB
 2. Enable "File Transfer" mode
 3. Copy `app-release-signed.apk` to phone
-4. Open file manager → Install
+4. Open file manager and install
+
+### Test Checklist
+
+- [ ] App opens without URL bar (frameless mode)
+- [ ] PWA loads correctly
+- [ ] MWA wallet connection works
+- [ ] Navigation functions properly
+- [ ] Splash screen displays and fades
 
 ## Version Updates
 
-For app updates, increment version in `twa-manifest.json`:
+For app updates, edit `twa-manifest.json`:
 
 ```json
 {
-  "appVersionCode": 2,    // Must increase for updates
+  "appVersionCode": 2,
   "appVersionName": "1.1.0"
 }
 ```
 
-Then rebuild:
-
-```bash
-bubblewrap build
-```
+Rules:
+- `appVersionCode` must always increase (1, 2, 3...)
+- `appVersionCode` cannot be reused
+- Then run `./scripts/build-twa.sh`
 
 ## Build Options
 
 ### Skip PWA Validation
 
-If your manifest isn't perfect:
+If your manifest has minor issues:
 
 ```bash
+# The build script uses this by default
 bubblewrap build --skipPwaValidation
 ```
 
-### Use Existing Android Project
+### Clean Build
+
+If you encounter issues:
 
 ```bash
-bubblewrap update --manifest=./twa-manifest.json
+rm -rf app build .gradle
+./scripts/build-twa.sh
 ```
 
 ## CI/CD Build
@@ -145,12 +126,11 @@ jobs:
         run: npm install -g @bubblewrap/cli
 
       - name: Decode Keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > twa/android.keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > twa/android.keystore
 
       - name: Build TWA
         working-directory: twa
-        run: bubblewrap build --skipPwaValidation
+        run: ./scripts/build-twa.sh
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -164,43 +144,22 @@ jobs:
 
 ### Required Secrets
 
-| Secret | How to get |
-|--------|-----------|
+| Secret | How to Generate |
+|--------|-----------------|
 | `KEYSTORE_BASE64` | `base64 -i android.keystore` |
 | `KEYSTORE_PASSWORD` | Your keystore password |
 | `KEY_PASSWORD` | Your key alias password |
 
-## Troubleshooting
+## Build Output
 
-### "JDK not found"
+Successful build shows:
 
-```bash
-# Set JAVA_HOME
-export JAVA_HOME=/path/to/jdk17
-
-# Or let Bubblewrap install it
-bubblewrap doctor
 ```
-
-### "Android SDK not found"
-
-```bash
-# Let Bubblewrap install SDK
-bubblewrap doctor
+Building the Android App...
+  - Generated Android APK at ./app-release-signed.apk
 ```
-
-### Build Fails
-
-1. Check `twa-manifest.json` is valid JSON
-2. Verify manifest.json is accessible on your domain
-3. Ensure icons exist at specified paths
-4. Try `bubblewrap build --skipPwaValidation`
-
-### APK Too Large
-
-The APK includes Android resources but loads your PWA from the web. Size is typically 1-2MB regardless of PWA size.
 
 ## Next Steps
 
-1. [Configure Digital Asset Links](/twa/asset-links) for frameless mode
+1. [Verify frameless mode](/twa/asset-links#step-4-verify-setup)
 2. [Publish to dApp Store](/twa/dapp-store)

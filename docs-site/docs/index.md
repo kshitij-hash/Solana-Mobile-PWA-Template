@@ -25,10 +25,10 @@ features:
     details: Seamless integration with Solana mobile wallets using MWA for secure transactions.
   - icon: ⚡
     title: PWA Ready
-    details: Installable as a native-like app with offline support, push notifications, and home screen icon.
+    details: Installable as a native-like app with offline support and home screen presence.
   - icon: 🤖
     title: TWA Support
-    details: Convert to Android app using Bubblewrap with Chrome browser preference and frameless mode.
+    details: Convert to Android app with interactive setup script for Solana dApp Store publishing.
   - icon: 🎨
     title: Mobile-First UI
     details: Splash screens, bottom navigation, safe areas, pull-to-refresh, and smooth animations.
@@ -56,7 +56,7 @@ Open [http://localhost:3000](http://localhost:3000) on your mobile device or emu
 |-------|------------|
 | Framework | Next.js 16 (App Router) |
 | Language | TypeScript |
-| Styling | Tailwind CSS + CSS Variables |
+| Styling | Tailwind CSS |
 | Animations | Framer Motion |
 | Wallet | @solana-mobile/wallet-adapter-mobile |
 | Web3 | @solana/web3.js |
@@ -67,9 +67,9 @@ Open [http://localhost:3000](http://localhost:3000) on your mobile device or emu
 
 - **Mobile Wallet Adapter (MWA)** - Connect to Solana mobile wallets
 - **Hybrid Splash Screen** - Native + PWA animated splash
-- **Chrome Browser Preference** - Custom TWA config defaults to Chrome
+- **Chrome Browser Preference** - Automatic via android-browser-helper
 - **Safe Area Support** - Handle notches, gesture bars, curved edges
 - **Bottom Navigation** - Mobile-intuitive with 48dp+ touch targets
 - **Pull-to-Refresh** - Native-feeling gesture support
-- **Framer Motion Animations** - Smooth, performant UI animations
-- **Bubblewrap Integration** - Complete TWA configuration for dApp Store
+- **Framer Motion Animations** - Smooth, performant UI transitions
+- **TWA Scripts** - Interactive setup and build scripts for dApp Store

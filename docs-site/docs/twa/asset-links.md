@@ -181,23 +181,6 @@ keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -sto
 - Chrome caches verification for 24 hours
 - For testing, clear Chrome data
 
-## Play Store Signing
-
-If using Play App Signing:
-
-1. Get Play Store's signing fingerprint from Play Console
-2. Add it to your `assetlinks.json`
-3. You'll have both your upload key and Play's key:
-
-```json
-{
-  "sha256_cert_fingerprints": [
-    "YOUR_UPLOAD_KEY_FINGERPRINT",
-    "PLAY_STORE_SIGNING_FINGERPRINT"
-  ]
-}
-```
-
 ## Best Practices
 
 1. **Test before release** - Verify frameless mode works

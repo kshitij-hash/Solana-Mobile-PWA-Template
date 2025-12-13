@@ -10,7 +10,7 @@ Create a `.env.local` file for environment-specific settings:
 # Solana Network (mainnet-beta, devnet, testnet)
 NEXT_PUBLIC_SOLANA_NETWORK=mainnet-beta
 
-# RPC Endpoint (optional - uses default if not set)
+# Custom RPC Endpoint (optional - uses default if not set)
 NEXT_PUBLIC_RPC_ENDPOINT=https://api.mainnet-beta.solana.com
 ```
 
@@ -25,7 +25,7 @@ Edit `public/manifest.json` to customize your PWA:
   "description": "Your app description",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#9945FF",
+  "background_color": "#0a0a0a",
   "theme_color": "#9945FF",
   "orientation": "portrait-primary",
   "icons": [
@@ -38,6 +38,12 @@ Edit `public/manifest.json` to customize your PWA:
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
@@ -47,11 +53,12 @@ Edit `public/manifest.json` to customize your PWA:
 
 | Field | Description |
 |-------|-------------|
-| `name` | Full app name (displayed in app stores) |
-| `short_name` | Short name (displayed on home screen) |
+| `name` | Full app name (displayed in install prompts) |
+| `short_name` | Short name (displayed on home screen, max 12 chars) |
 | `display` | `standalone` for app-like experience |
 | `theme_color` | Status bar color on mobile |
 | `background_color` | Splash screen background |
+| `orientation` | Lock to `portrait-primary` for mobile-first |
 
 ## Network Configuration
 
@@ -68,85 +75,51 @@ const network = (process.env.NEXT_PUBLIC_SOLANA_NETWORK as WalletAdapterNetwork)
 
 ### Custom RPC Endpoint
 
+For better performance or rate limits, use a custom RPC:
+
 ```tsx
 const endpoint = useMemo(() => {
-  // Use custom RPC endpoint
   if (process.env.NEXT_PUBLIC_RPC_ENDPOINT) {
     return process.env.NEXT_PUBLIC_RPC_ENDPOINT;
   }
-  // Fall back to default
   return clusterApiUrl(network);
 }, [network]);
 ```
 
-## TWA Configuration
-
-Edit `twa/twa-manifest.json` for Android app settings:
-
-```json
-{
-  "packageId": "com.yourcompany.yourapp",
-  "host": "your-domain.com",
-  "name": "Your App Name",
-  "launcherName": "Your App",
-  "display": "standalone",
-  "themeColor": "#9945FF",
-  "backgroundColor": "#0a0a0a",
-  "startUrl": "/",
-  "iconUrl": "/icons/icon-512x512.png"
-}
-```
-
-See the [TWA Guide](/twa/overview) for detailed configuration.
+Popular RPC providers:
+- [Helius](https://helius.xyz)
+- [QuickNode](https://quicknode.com)
+- [Triton](https://triton.one)
 
 ## Next.js Configuration
 
-The `next.config.js` includes PWA and optimization settings:
+The `next.config.ts` includes PWA settings:
 
-```js
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  disable: process.env.NODE_ENV === 'development',
+```ts
+import type { NextConfig } from "next";
+import withPWAInit from "@ducanh2912/next-pwa";
+
+const withPWA = withPWAInit({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
   register: true,
   skipWaiting: true,
 });
 
-module.exports = withPWA({
+const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // Add your custom Next.js config here
-});
-```
-
-## Build Configuration
-
-### Development
-
-```bash
-npm run dev
-```
-
-### Production Build
-
-```bash
-npm run build
-npm run start
-```
-
-### Static Export (Optional)
-
-For static hosting without a Node.js server:
-
-```js
-// next.config.js
-module.exports = {
-  output: 'export',
-  // ... other config
 };
+
+export default withPWA(nextConfig);
 ```
 
-Then run:
+### Service Worker
 
-```bash
-npm run build
-# Output in 'out' directory
-```
+The service worker is automatically generated in production. It caches:
+- Static assets (JS, CSS, images)
+- App shell for offline access
+- API responses (configurable)
+
+## TWA Configuration
+
+For Android TWA settings, see the [TWA Setup Guide](/twa/setup).

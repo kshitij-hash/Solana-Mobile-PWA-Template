@@ -1,84 +1,108 @@
 # Mobile Wallet Adapter
 
-The template includes full Mobile Wallet Adapter (MWA) integration for connecting to Solana mobile wallets.
+The template includes Mobile Wallet Adapter (MWA) integration for connecting to Solana wallets on mobile devices.
 
 ## How MWA Works
 
-Mobile Wallet Adapter is a protocol that allows web apps to communicate with Solana wallet apps on mobile devices:
+Mobile Wallet Adapter is a protocol that allows web apps to communicate with Solana wallet apps:
 
-1. **Your dApp** initiates a connection request
+```
+┌─────────────┐    Deep Link    ┌─────────────┐
+│   Your dApp │ ──────────────► │   Wallet    │
+│             │                 │   (Phantom) │
+│             │ ◄────────────── │             │
+└─────────────┘   Signed Tx     └─────────────┘
+```
+
+1. **Your dApp** initiates a connection/signing request
 2. **MWA** opens the wallet app via deep link
 3. **User** approves in their wallet
-4. **Wallet** returns the signed transaction to your dApp
+4. **Wallet** returns the result to your dApp
 
-## Using the Wallet
-
-### Basic Usage
+## Basic Usage
 
 ```tsx
 import { useWallet } from '@solana/wallet-adapter-react';
 
 function MyComponent() {
-  const { connected, publicKey, sendTransaction } = useWallet();
+  const { connected, publicKey } = useWallet();
 
   if (!connected) {
     return <WalletButton />;
   }
 
-  return (
-    <div>
-      <p>Connected: {publicKey?.toBase58()}</p>
-    </div>
-  );
+  return <p>Connected: {publicKey?.toBase58()}</p>;
 }
 ```
 
-### Signing Transactions
+## Sending Transactions
 
 ```tsx
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
-import { Transaction, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import {
+  Transaction,
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+  PublicKey
+} from '@solana/web3.js';
 
 function SendSol() {
-  const { publicKey, signTransaction } = useWallet();
+  const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
 
-  const handleSend = async () => {
-    if (!publicKey || !signTransaction) return;
+  const handleSend = async (recipient: string, amount: number) => {
+    if (!publicKey) return;
 
     const transaction = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: publicKey,
-        toPubkey: recipientAddress,
-        lamports: 0.1 * LAMPORTS_PER_SOL,
+        toPubkey: new PublicKey(recipient),
+        lamports: amount * LAMPORTS_PER_SOL,
       })
     );
 
-    transaction.recentBlockhash = (
-      await connection.getLatestBlockhash()
-    ).blockhash;
-    transaction.feePayer = publicKey;
+    const signature = await sendTransaction(transaction, connection);
+    await connection.confirmTransaction(signature, 'confirmed');
 
-    // Sign with MWA
-    const signed = await signTransaction(transaction);
-
-    // Send the signed transaction
-    const signature = await connection.sendRawTransaction(signed.serialize());
-
-    await connection.confirmTransaction(signature);
+    console.log('Transaction confirmed:', signature);
   };
 
-  return <button onClick={handleSend}>Send 0.1 SOL</button>;
+  return (
+    <button onClick={() => handleSend('recipient...', 0.1)}>
+      Send 0.1 SOL
+    </button>
+  );
 }
 ```
 
-## Configuration
+## Signing Messages
 
-### App Identity
+```tsx
+import { useWallet } from '@solana/wallet-adapter-react';
+
+function SignMessage() {
+  const { publicKey, signMessage } = useWallet();
+
+  const handleSign = async () => {
+    if (!publicKey || !signMessage) return;
+
+    const message = new TextEncoder().encode('Hello, Solana!');
+    const signature = await signMessage(message);
+
+    console.log('Signature:', signature);
+  };
+
+  return <button onClick={handleSign}>Sign Message</button>;
+}
+```
+
+## App Identity
 
 Configure your app's identity in `WalletProvider.tsx`:
 
 ```tsx
+import { SolanaMobileWalletAdapter } from '@solana-mobile/wallet-adapter-mobile';
+
 const wallets = useMemo(
   () => [
     new SolanaMobileWalletAdapter({
@@ -94,95 +118,73 @@ const wallets = useMemo(
 );
 ```
 
-### Authorization Caching
-
-Control how long authorization is cached:
-
-```tsx
-new SolanaMobileWalletAdapter({
-  appIdentity: { /* ... */ },
-  cluster: network,
-  authorizationResultCache: {
-    // Disable caching (reconnect each time)
-    clear: async () => {},
-    get: async () => null,
-    set: async () => {},
-  },
-});
-```
-
-## Wallet Connection Flow
-
-```tsx
-import { useWallet } from '@solana/wallet-adapter-react';
-
-function ConnectButton() {
-  const { connect, disconnect, connected, connecting } = useWallet();
-
-  if (connecting) {
-    return <button disabled>Connecting...</button>;
-  }
-
-  if (connected) {
-    return <button onClick={disconnect}>Disconnect</button>;
-  }
-
-  return <button onClick={connect}>Connect Wallet</button>;
-}
-```
+This identity is shown to users when they connect or sign transactions.
 
 ## Error Handling
 
-Handle MWA-specific errors:
-
 ```tsx
 import { useWallet } from '@solana/wallet-adapter-react';
 
-function TransactionComponent() {
-  const { signTransaction } = useWallet();
+function TransactionButton() {
+  const { sendTransaction } = useWallet();
 
   const handleTransaction = async () => {
     try {
-      const signed = await signTransaction(transaction);
+      const signature = await sendTransaction(transaction, connection);
       // Success
-    } catch (error) {
+    } catch (error: any) {
       if (error.name === 'WalletNotConnectedError') {
-        console.log('Wallet not connected');
+        console.log('Please connect your wallet');
       } else if (error.name === 'WalletSignTransactionError') {
-        console.log('User rejected transaction');
+        console.log('Transaction was rejected');
       } else {
-        console.error('Transaction error:', error);
+        console.error('Transaction failed:', error.message);
       }
     }
   };
 }
 ```
 
-## Supported Wallets
+## Connection States
 
-MWA works with any Solana mobile wallet that implements the protocol:
+```tsx
+import { useWallet } from '@solana/wallet-adapter-react';
 
-- **Phantom** - Popular multi-chain wallet
-- **Solflare** - Solana-native wallet
+function WalletStatus() {
+  const { connected, connecting, disconnecting, publicKey } = useWallet();
 
-## Testing
+  if (connecting) return <span>Connecting...</span>;
+  if (disconnecting) return <span>Disconnecting...</span>;
+  if (connected) return <span>Connected: {publicKey?.toBase58().slice(0, 8)}...</span>;
 
-### On Emulator
-
-1. Install a wallet APK on the emulator
-2. Create/import a wallet with devnet SOL
-3. Test your dApp's connection flow
-
-### On Device
-
-1. Install wallet from Play Store
-2. Connect to the same network as your dApp
-3. Test transaction on devnet
+  return <span>Not connected</span>;
+}
+```
 
 ## Best Practices
 
-1. **Always handle disconnection** - Users may disconnect from the wallet app
-2. **Show loading states** - MWA operations require user interaction
-3. **Handle rejections gracefully** - Users can cancel at any time
-4. **Use devnet for testing** - Never test with mainnet funds
-5. **Cache authorization appropriately** - Balance UX vs security
+1. **Handle all states** - Show loading during `connecting` and `disconnecting`
+2. **Graceful rejections** - Users can cancel at any time
+3. **Use devnet for testing** - Never test with real funds
+4. **Show transaction status** - Confirm transactions before showing success
+5. **Mobile-first UX** - Large touch targets, clear feedback
+
+## Testing
+
+### On Device
+
+1. Install a Solana wallet (Phantom, Solflare) from Play Store
+2. Create or import a wallet
+3. Switch to devnet in wallet settings
+4. Get devnet SOL from a [faucet](https://faucet.solana.com)
+5. Test your dApp's connection and signing flows
+
+### On Emulator
+
+1. Install wallet APK on emulator
+2. Configure wallet for devnet
+3. Test connection flow
+
+::: tip
+MWA requires Chrome on Android for best compatibility. See [Chrome Preference](/twa/chrome-preference) for TWA setup.
+:::

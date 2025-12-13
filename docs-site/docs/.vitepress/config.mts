@@ -77,7 +77,6 @@ export default defineConfig({
           text: 'Publishing',
           items: [
             { text: 'dApp Store', link: '/twa/dapp-store' },
-            { text: 'Play Store', link: '/twa/play-store' }
           ]
         }
       ],

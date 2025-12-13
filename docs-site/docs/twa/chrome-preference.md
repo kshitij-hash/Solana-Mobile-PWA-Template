@@ -1,172 +1,105 @@
 # Chrome Browser Preference
 
-How the template forces Chrome as the TWA browser.
+How the TWA automatically prefers Chrome for MWA compatibility.
 
-## The Problem
+## Why Chrome Matters
 
-By default, TWA uses whichever browser:
-1. Supports TWA protocol
-2. Is set as default
-3. Handles the domain
+Chrome is essential for Solana Mobile TWAs because:
 
-This could be Samsung Internet, Firefox, or others - not ideal for:
-- **MWA compatibility** - Chrome has best wallet adapter support
-- **Consistent experience** - Different browsers behave differently
-- **Debugging** - Chrome DevTools is best for web debugging
+- **MWA compatibility** - Mobile Wallet Adapter works best with Chrome
+- **TWA support** - Chrome has the most mature TWA implementation
+- **Consistent experience** - Predictable behavior across devices
 
-## The Solution
+## Automatic Chrome Preference
 
-A custom `LauncherActivity` that explicitly requests Chrome:
+The `android-browser-helper` library (v2.6.2+) **automatically prefers Chrome** when it's installed on the device. No custom configuration is needed.
 
-```java
-// twa/CustomLauncherActivity.java
-package com.solanapwa.template;
-
-import android.content.pm.PackageManager;
-import com.google.androidbrowserhelper.trusted.LauncherActivity;
-
-public class CustomLauncherActivity extends LauncherActivity {
-
-    private static final String[] CHROME_PACKAGES = {
-        "com.android.chrome",     // Chrome Stable
-        "com.chrome.beta",        // Chrome Beta
-        "com.chrome.dev",         // Chrome Dev
-        "com.chrome.canary"       // Chrome Canary
-    };
-
-    @Override
-    protected String getProviderPackage() {
-        // Try each Chrome variant
-        for (String chromePackage : CHROME_PACKAGES) {
-            if (isPackageInstalled(chromePackage)) {
-                return chromePackage;
-            }
-        }
-        // Fall back to system default
-        return null;
-    }
-
-    private boolean isPackageInstalled(String packageName) {
-        try {
-            getPackageManager().getPackageInfo(packageName, 0);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-    }
-}
-```
-
-## How It Works
-
-1. **App launches** → `CustomLauncherActivity.onCreate()`
-2. **getProviderPackage()** is called
-3. **Check for Chrome** in order: Stable → Beta → Dev → Canary
-4. **If found** → Return package name → Chrome opens your PWA
-5. **If not found** → Return null → System default browser
+The library checks for available TWA-capable browsers in this order:
+1. Chrome Stable (`com.android.chrome`)
+2. Chrome Beta (`com.chrome.beta`)
+3. Chrome Dev (`com.chrome.dev`)
+4. Other TWA-compatible browsers
 
 ## Fallback Behavior
-
-If Chrome isn't installed:
 
 | Scenario | Result |
 |----------|--------|
 | Chrome installed | Opens in Chrome (frameless if DAL configured) |
-| Chrome not installed | Opens in system default browser |
+| Chrome not installed | Opens in system default TWA browser |
 | No TWA browser | Falls back to Custom Tabs (with URL bar) |
 
-## Integration
+## CustomLauncherActivity
 
-The build script (`build-twa.sh`) handles integration:
-
-```bash
-# 1. Copy custom activity to Android project
-cp CustomLauncherActivity.java app/src/main/java/com/solanapwa/template/
-
-# 2. Update AndroidManifest.xml to use it
-sed -i 's/LauncherActivity/.CustomLauncherActivity/g' app/src/main/AndroidManifest.xml
-```
-
-## Manual Integration
-
-If not using the build script:
-
-### 1. Copy Activity
-
-Copy `CustomLauncherActivity.java` to your Android project:
-
-```
-app/src/main/java/[your-package-path]/CustomLauncherActivity.java
-```
-
-### 2. Update Package Name
-
-Edit the package declaration:
+The template includes a `CustomLauncherActivity.java` for optional customizations:
 
 ```java
-package com.yourcompany.yourapp;  // Match your package ID
+public class CustomLauncherActivity extends LauncherActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Lock to portrait orientation on Android 8+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+
+    @Override
+    protected Uri getLaunchingUrl() {
+        // Customize launch URL if needed
+        Uri uri = super.getLaunchingUrl();
+        // Add query parameters, handle deep links, etc.
+        return uri;
+    }
+}
 ```
 
-### 3. Update Manifest
+### Available Customizations
 
-In `app/src/main/AndroidManifest.xml`:
+| Method | Purpose |
+|--------|---------|
+| `onCreate()` | Set screen orientation, initialize tracking |
+| `getLaunchingUrl()` | Modify launch URL, add parameters |
 
-```xml
-<!-- Replace this -->
-<activity
-    android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
-    android:exported="true">
+## Verifying Chrome is Used
 
-<!-- With this -->
-<activity
-    android:name=".CustomLauncherActivity"
-    android:exported="true">
+### Check via Recent Apps
+
+1. Open your TWA
+2. Long-press the recent apps button
+3. Check which browser appears in app info
+
+### Check via ADB Logs
+
+```bash
+adb logcat | grep -i "chrome\|twa\|launcher"
 ```
 
-## Testing
+## What If Chrome Isn't Available?
 
-### Verify Chrome is Used
+If the user doesn't have Chrome:
 
-1. Install TWA on device with Chrome
-2. Open the app
-3. Long-press recents button
-4. Check which browser appears in app info
+1. **Samsung devices** - Samsung Internet may be used (supports TWA)
+2. **Other devices** - System default browser
+3. **No TWA support** - Falls back to Custom Tabs with URL bar
 
-### Test Without Chrome
+::: tip MWA Recommendation
+For best MWA experience, recommend users install Chrome if wallet connections fail.
+:::
 
-1. Disable Chrome in Settings → Apps → Chrome → Disable
+## Testing Without Chrome
+
+To test fallback behavior:
+
+1. Disable Chrome: Settings > Apps > Chrome > Disable
 2. Open your TWA
-3. Verify it falls back to another browser
+3. Observe fallback behavior
 4. Re-enable Chrome
-
-## Why Not Just Set Chrome as Default?
-
-- Users control their default browser
-- Chrome might not be the default
-- Samsung/Xiaomi devices often default to their browsers
-- This approach respects user choice while preferring Chrome
-
-## Logging
-
-The activity logs its behavior:
-
-```java
-Log.d("CustomLauncherActivity", "Using Chrome package: com.android.chrome");
-// or
-Log.d("CustomLauncherActivity", "Chrome not found, falling back to system default");
-```
-
-View logs with:
-
-```bash
-adb logcat | grep CustomLauncherActivity
-```
 
 ## Compatibility
 
-| Android Version | Support |
-|-----------------|---------|
+| Android Version | Chrome TWA Support |
+|-----------------|-------------------|
 | Android 7.0+ (API 24) | Full support |
 | Android 6.0 (API 23) | Not supported |
 
-Older devices won't run TWA at all - they need `minSdkVersion: 24`.
+TWA requires `minSdkVersion: 24` (Android 7.0).

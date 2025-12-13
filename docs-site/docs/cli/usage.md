@@ -27,11 +27,11 @@ create-solana-pwa my-dapp
 
 ## What It Does
 
-1. **Creates project directory**
-2. **Clones the template** from GitHub
-3. **Updates configuration** with your project name
-4. **Installs dependencies**
-5. **Initializes git** repository
+1. Creates project directory
+2. Clones the template from GitHub
+3. Updates configuration with your project name
+4. Installs dependencies
+5. Initializes git repository
 
 ## Interactive Mode
 
@@ -59,16 +59,17 @@ my-dapp/
 ├── src/
 │   ├── app/                    # Next.js pages
 │   ├── components/             # React components
-│   ├── hooks/                  # Custom hooks
-│   └── styles/                 # CSS files
+│   └── hooks/                  # Custom hooks
 ├── public/
 │   ├── manifest.json           # PWA manifest
 │   ├── icons/                  # App icons
 │   └── .well-known/            # Asset links
 ├── twa/                        # TWA configuration
-│   ├── twa-manifest.json
+│   ├── twa-manifest.template.json
 │   ├── CustomLauncherActivity.java
-│   └── scripts/build-twa.sh
+│   └── scripts/
+│       ├── init-twa.sh         # First-time TWA setup
+│       └── build-twa.sh        # Rebuild TWA
 ├── package.json
 └── README.md
 ```
@@ -89,13 +90,14 @@ npm run build
 npm run start
 ```
 
-### Build TWA
+### Build TWA (Android App)
 
 ```bash
 cd twa
-bubblewrap init --manifest https://your-deployed-url.com/manifest.json
-bubblewrap build
+./scripts/init-twa.sh
 ```
+
+The init script will prompt for app name, package ID, and host URL, then build your APK.
 
 ## Example Workflow
 
@@ -103,27 +105,22 @@ bubblewrap build
 # 1. Create project
 npx create-solana-pwa my-defi-app --network devnet
 
-# 2. Enter directory
+# 2. Start development
 cd my-defi-app
-
-# 3. Start development
 npm run dev
 
-# 4. Customize app
+# 3. Customize your app
 # - Edit src/app/page.tsx
 # - Update public/manifest.json
-# - Add your features
 
-# 5. Deploy PWA
+# 4. Deploy PWA to Vercel/Netlify
 npm run build
-# Deploy to Vercel, Netlify, etc.
 
-# 6. Build Android app
+# 5. Build Android app
 cd twa
-bubblewrap init --manifest https://my-defi-app.vercel.app/manifest.json
-bubblewrap build
+./scripts/init-twa.sh
 
-# 7. Test APK
+# 6. Test APK
 adb install app-release-signed.apk
 ```
 
@@ -132,26 +129,18 @@ adb install app-release-signed.apk
 ### "Directory already exists"
 
 ```bash
-# Remove existing directory
 rm -rf my-dapp
-
-# Or use a different name
-npx create-solana-pwa my-dapp-v2
+npx create-solana-pwa my-dapp
 ```
 
 ### "Failed to clone template"
 
-Check internet connection, then try again:
-
-```bash
-npx create-solana-pwa my-dapp
-```
-
-Or clone manually:
+Check internet connection and try again, or clone manually:
 
 ```bash
 git clone https://github.com/kshitij-hash/Solana-Mobile-PWA-Template.git my-dapp
 cd my-dapp
+rm -rf cli docs-site .git
 npm install
 ```
 
@@ -162,14 +151,8 @@ cd my-dapp
 npm install --legacy-peer-deps
 ```
 
-## Help
-
-```bash
-npx create-solana-pwa --help
-```
-
 ## Links
 
-- **npm:** [npmjs.com/package/create-solana-pwa](https://www.npmjs.com/package/create-solana-pwa)
-- **GitHub:** [github.com/kshitij-hash/Solana-Mobile-PWA-Template](https://github.com/kshitij-hash/Solana-Mobile-PWA-Template)
-- **Demo:** [solana-pwa-template.vercel.app](https://solana-pwa-template.vercel.app)
+- [npm](https://www.npmjs.com/package/create-solana-pwa)
+- [GitHub](https://github.com/kshitij-hash/Solana-Mobile-PWA-Template)
+- [Demo](https://solana-pwa-template.vercel.app)
