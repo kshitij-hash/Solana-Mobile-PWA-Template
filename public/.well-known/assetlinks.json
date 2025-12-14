@@ -3,9 +3,9 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "YOUR_PACKAGE_ID_HERE",
+      "package_name": "com.solanapwa.app",
       "sha256_cert_fingerprints": [
-        "YOUR_SHA256_FINGERPRINT_HERE"
+        "6C:1C:C3:3E:7B:9C:67:D1:F8:94:EE:A1:65:2D:65:83:D5:CE:45:C6:24:0D:24:E8:66:08:C3:33:CB:1C:50:39"
       ]
     }
   }
