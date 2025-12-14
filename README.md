@@ -20,6 +20,10 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) on your mobile device.
 
+## Walkthrough
+
+https://github.com/user-attachments/assets/776f1760-f44e-4d2d-be60-6e1ebaa0e941
+
 ## Features
 
 - **Mobile Wallet Adapter (MWA)** - Connect with Solana mobile wallets
